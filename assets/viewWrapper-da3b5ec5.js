@@ -1,0 +1,1 @@
+import{a as e}from"./chunk-BGPNDDXN-fe77eba9.js";import{d as s}from"./darkmode-5af2451c.js";const o=s("viewWrapper",(()=>{const s=e(!1),o=e(!1),t=e("Welcome");return{isPushed:s,isPushedBlock:o,pageTitle:t,setPushed:function(e){s.value=e},setPushedBlock:function(e){o.value=e},setPageTitle:function(e){t.value=e}}}));export{o as u};
