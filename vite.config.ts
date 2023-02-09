@@ -31,8 +31,8 @@ export default defineConfig({
   // Base public path when served in development or production.
   // You also need to add this base like `history: createWebHistory('my-subdirectory')`
   // in ./src/router.ts
-  // base: '/my-subdirectory/',
-  base: '/',
+  base: '/lynx-frontend-vue/',
+  // base: '/',
   // Directory to serve as plain static assets.
   publicDir: 'public',
   // Adjust console output verbosity.
