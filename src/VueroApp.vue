@@ -21,7 +21,7 @@ initDarkmode()
       </RouterView>
     </Suspense>
     <ClientOnly>
-      <VReloadPrompt app-name="Vuero" />
+      <VReloadPrompt app-name="Let'z" />
     </ClientOnly>
   </div>
 </template>

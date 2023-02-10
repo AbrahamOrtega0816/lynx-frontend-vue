@@ -44,6 +44,7 @@ declare module 'vue-router/auto/routes' {
     '/auth/signup': RouteRecordInfo<'/auth/signup', '/auth/signup', Record<never, never>, Record<never, never>>,
     '/courses': RouteRecordInfo<'/courses', '/courses', Record<never, never>, Record<never, never>>,
     '/courses/': RouteRecordInfo<'/courses/', '/courses', Record<never, never>, Record<never, never>>,
+    '/courses/detail/[id]': RouteRecordInfo<'/courses/detail/[id]', '/courses/detail/:id', { id: ParamValue<true> }, { id: ParamValue<false> }>,
   }
 }
 

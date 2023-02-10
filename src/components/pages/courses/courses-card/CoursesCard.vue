@@ -6,6 +6,10 @@ defineProps<{
   courses?: Array<any>
   isLoading?: boolean
 }>()
+
+const router = useRouter()
+
+const rediretToCoursesDetail = (id: number) => router.push(`courses/detail/${id}`)
 </script>
 
 <!-- eslint-disable prettier-vue/prettier -->
@@ -23,12 +27,12 @@ defineProps<{
       <template #image>
         <img
           class="light-image"
-          src="/@src/assets/illustrations/placeholders/search-4.svg"
+          src="/@src/assets/illustrations/placeholders/search-1.svg"
           alt=""
         />
         <img
           class="dark-image"
-          src="/@src/assets/illustrations/placeholders/search-4-dark.svg"
+          src="/@src/assets/illustrations/placeholders/search-1-dark.svg"
           alt=""
         />
       </template>
@@ -94,7 +98,11 @@ defineProps<{
         :key="course.id"
         class="column is-6-tablet is-4-desktop is-3-fullhd"
       >
-        <a href="#" class="card-grid-item">
+        <div
+          class="card-grid-item is-clickable"
+          @click="rediretToCoursesDetail(course.id)"
+          @keydown="rediretToCoursesDetail(course.id)"
+        >
           <img
             :src="course.image"
             :alt="course.name"
@@ -144,7 +152,7 @@ defineProps<{
               <VProgress size="smaller" :value="course?.progress" />
             </div>
           </div>
-        </a>
+        </div>
       </div>
     </TransitionGroup>
   </div>
