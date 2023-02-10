@@ -1,3 +1,4 @@
+<!-- eslint-disable prettier-vue/prettier -->
 <script setup lang="ts">
 import { courseService } from '/@src/services'
 import { useUserSession } from '/@src/stores/userSession'
@@ -44,19 +45,20 @@ const getListCourses = async () => {
   return response
 }
 
-const { data } = useQuery({
+const { data, isLoading } = useQuery({
   queryKey: ['courses', form.values],
   queryFn: getListCourses,
   refetchOnWindowFocus: false,
 })
 </script>
 
+<!-- eslint-disable prettier-vue/prettier -->
 <template>
   <div>
     <CoursesFilters />
     <div class="card-grid card-grid-v4">
       <!--List Empty Search Placeholder -->
-      <CoursesCard :courses="data?.courses" />
+      <CoursesCard :courses="data?.courses" :is-loading="isLoading" />
       <!--Table Pagination-->
       <VFlexPagination
         v-if="data?.count > 3"

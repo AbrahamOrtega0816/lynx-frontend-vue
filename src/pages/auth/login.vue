@@ -45,7 +45,6 @@ const handleLogin = async () => {
     await authService
       .postLogin(values)
       .then(async (res) => {
-        debugger
         if (res.status === 200) {
           const {
             data: { authToken, name, user_id },

@@ -1,3 +1,4 @@
+<!-- eslint-disable prettier-vue/prettier -->
 <script setup lang="ts">
 import { courseService } from '/@src/services'
 import { useQuery } from 'vue-query'
@@ -58,25 +59,26 @@ const AsyncField = defineAsyncComponent({
   loader: async () => Field,
 })
 
-const { data: status = [] } = useQuery({
+const { data: status = [], isLoading: isLoadingStatus } = useQuery({
   queryKey: ['status'],
   queryFn: getCoursesStatus,
   refetchOnWindowFocus: false,
 })
 
-const { data: categories = [] } = useQuery({
+const { data: categories = [], isLoading: isLoadingCategories } = useQuery({
   queryKey: ['categories'],
   queryFn: getCoursesCategories,
   refetchOnWindowFocus: false,
 })
 
-const { data: specialities = [] } = useQuery({
+const { data: specialities = [], isLoading: isLoadingSpecialities } = useQuery({
   queryKey: ['specialities'],
   queryFn: getCoursesSpecialities,
   refetchOnWindowFocus: false,
 })
 </script>
 
+<!-- eslint-disable prettier-vue/prettier -->
 <template>
   <div class="columns is-desktop">
     <div class="column">
@@ -104,6 +106,7 @@ const { data: specialities = [] } = useQuery({
               :max-height="175"
               :searchable="true"
               :create-tag="true"
+              :loding="isLoadingStatus"
               @change="handleChange"
             />
           </VControl>
@@ -125,6 +128,7 @@ const { data: specialities = [] } = useQuery({
               fullwidth
               :searchable="true"
               :create-tag="true"
+              :loading="isLoadingCategories"
               @change="handleChange"
             />
           </VControl>
@@ -146,6 +150,7 @@ const { data: specialities = [] } = useQuery({
               fullwidth
               :searchable="true"
               :create-tag="true"
+              :loading="isLoadingSpecialities"
               @change="handleChange"
             />
           </VControl>
@@ -158,10 +163,10 @@ const { data: specialities = [] } = useQuery({
           <VControl>
             <VSwitchBlock
               v-model="field.value"
-              @update:model-value="handleChange"
               thin
               label="Favorite"
               color="primary"
+              @update:model-value="handleChange"
             />
           </VControl>
         </VField>
@@ -170,6 +175,7 @@ const { data: specialities = [] } = useQuery({
   </div>
 </template>
 
+<!-- eslint-disable prettier-vue/prettier -->
 <style lang="scss">
 .control-multiselect {
   min-width: 190px;

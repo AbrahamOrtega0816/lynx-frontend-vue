@@ -1,93 +1,156 @@
+<!-- eslint-disable prettier-vue/prettier -->
 <script setup lang="ts">
 import { onceImageErrored } from '/@src/utils/via-placeholder'
 
 defineProps<{
   courses?: Array<any>
+  isLoading?: boolean
 }>()
 </script>
 
+<!-- eslint-disable prettier-vue/prettier -->
 <template>
   <div>
-    <div class="card-grid card-grid-v4">
-      <!--List Empty Search Placeholder -->
-      <VPlaceholderPage
-        :class="[courses?.length !== 0 && 'is-hidden']"
-        title="We couldn't find any matching results."
-        subtitle="Too bad. Looks like we couldn't find any matching results for the
+    <!--List Empty Search Placeholder -->
+    <VPlaceholderPage
+      :class="[courses?.length !== 0 && 'is-hidden']"
+      title="We couldn't find any matching results."
+      subtitle="Too bad. Looks like we couldn't find any matching results for the
           search terms you've entered. Please try different search terms or
           criteria."
-        larger
+      larger
+    >
+      <template #image>
+        <img
+          class="light-image"
+          src="/@src/assets/illustrations/placeholders/search-4.svg"
+          alt=""
+        />
+        <img
+          class="dark-image"
+          src="/@src/assets/illustrations/placeholders/search-4-dark.svg"
+          alt=""
+        />
+      </template>
+    </VPlaceholderPage>
+    <!--List Loading Placeholder -->
+    <div v-if="isLoading" class="columns is-multiline">
+      <div
+        v-for="key in 3"
+        :key="key"
+        class="column is-6-tablet is-4-desktop is-3-fullhd"
       >
-        <template #image>
-          <img
-            class="light-image"
-            src="/@src/assets/illustrations/placeholders/search-4.svg"
-            alt=""
-          />
-          <img
-            class="dark-image"
-            src="/@src/assets/illustrations/placeholders/search-4-dark.svg"
-            alt=""
-          />
-        </template>
-      </VPlaceholderPage>
-
-      <TransitionGroup name="list" tag="div" class="columns is-multiline">
-        <!--Grid item-->
-        <div v-for="course in courses" :key="course.id" class="column is-4">
-          <a href="#" class="card-grid-item">
-            <img :src="course.image" alt="" @error.once="onceImageErrored(400, 300)" />
-            <div class="card-grid-item-content mb-2">
-              <div class="mb-2 is-flex is-justify-content-space-between">
-                <h2 class="has-text-primary is-capitalized">
-                  {{ course.specialities.name }} - {{ course?.lessons }} Lessons
-                </h2>
-                <VIconWrap
-                  icon="mdi:heart-multiple"
-                  :color="course.is_favorite ? 'danger' : 'primary'"
-                />
+        <div class="card-grid-item">
+          <VPlaceload height="160px" class="mb-4" width="100%" :lines="1" centered />
+          <div class="card-grid-item-content mb-2">
+            <div
+              class="mb-2 is-flex is-justify-content-space-between is-align-items-center"
+            >
+              <div>
+                <VPlaceload width="150px" :lines="1" centered />
               </div>
-              <h3 class="dark-inverted is-capitalized">
-                {{ course.name }}
-              </h3>
+              <div>
+                <VPlaceloadAvatar size="small" />
+              </div>
             </div>
-            <div class="card-grid-item-footer">
-              <div class="is-flex is-justify-content-space-between is-align-items-center">
-                <VSnack
-                  :title="course.category.name"
-                  color="primary"
-                  white
-                  solid
-                  icon="feather:life-buoy"
-                  size="small"
-                />
-                <div class="meta">
-                  <i class="fas fa-star warning-text" />
-                  <i class="fas fa-star warning-text" />
-                  <i class="fas fa-star" />
-                  <i class="fas fa-star" />
-                  <i class="fas fa-star" />
+            <VPlaceload width="250px" :lines="1" />
+          </div>
+          <div class="card-grid-item-footer">
+            <div class="is-flex is-justify-content-space-between is-align-items-center">
+              <div>
+                <VPlaceloadAvatar size="small" />
+              </div>
+              <div class="meta">
+                <div>
+                  <VPlaceload width="100px" :lines="1" />
                 </div>
               </div>
-              <div
-                class="columns pt-5 px-2 is-flex is-justify-content-space-between is-align-items-center"
-              >
-                <span class="title is-6 is-bold my-0"> {{ course?.progress }}% </span>
-                <span class="title is-6 is-bold is-uppercase">
-                  {{ course?.status?.name }}
-                </span>
-              </div>
-              <div class="columns px-2">
-                <VProgress size="smaller" :value="course?.progress" />
+            </div>
+            <div
+              class="columns pt-5 px-2 is-flex is-justify-content-space-between is-align-items-center"
+            >
+              <span class="title is-6 is-bold my-0">
+                <div>
+                  <VPlaceload width="100px" :lines="1" />
+                </div>
+              </span>
+              <span class="title is-6 is-bold is-uppercase">
+                <div>
+                  <VPlaceload width="100px" :lines="1" />
+                </div>
+              </span>
+            </div>
+            <div class="columns px-2">
+              <VPlaceload :lines="1" />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <TransitionGroup v-else name="list" tag="div" class="columns is-multiline">
+      <!--Grid item-->
+      <div
+        v-for="course in courses"
+        :key="course.id"
+        class="column is-6-tablet is-4-desktop is-3-fullhd"
+      >
+        <a href="#" class="card-grid-item">
+          <img
+            :src="course.image"
+            :alt="course.name"
+            @error.once="onceImageErrored(400, 300)"
+          />
+          <div class="card-grid-item-content mb-2">
+            <div class="mb-2 is-flex is-justify-content-space-between">
+              <h2 class="has-text-primary is-capitalized">
+                {{ course.specialities.name }} - {{ course?.lessons }} Lessons
+              </h2>
+              <VIconWrap
+                icon="mdi:heart-multiple"
+                :color="course.is_favorite ? 'danger' : 'primary'"
+              />
+            </div>
+            <h3 class="dark-inverted is-capitalized">
+              {{ course.name }}
+            </h3>
+          </div>
+          <div class="card-grid-item-footer">
+            <div class="is-flex is-justify-content-space-between is-align-items-center">
+              <VSnack
+                :title="course.category.name"
+                color="primary"
+                white
+                solid
+                icon="feather:life-buoy"
+                size="small"
+              />
+              <div class="meta">
+                <i class="fas fa-star warning-text" />
+                <i class="fas fa-star warning-text" />
+                <i class="fas fa-star" />
+                <i class="fas fa-star" />
+                <i class="fas fa-star" />
               </div>
             </div>
-          </a>
-        </div>
-      </TransitionGroup>
-    </div>
+            <div
+              class="columns pt-5 px-2 is-flex is-justify-content-space-between is-align-items-center"
+            >
+              <span class="title is-6 is-bold my-0"> {{ course?.progress }}% </span>
+              <span class="title is-6 is-bold is-uppercase">
+                {{ course?.status?.name }}
+              </span>
+            </div>
+            <div class="columns px-2">
+              <VProgress size="smaller" :value="course?.progress" />
+            </div>
+          </div>
+        </a>
+      </div>
+    </TransitionGroup>
   </div>
 </template>
 
+<!-- eslint-disable prettier-vue/prettier -->
 <style lang="scss">
 @import '/@src/scss/abstracts/all';
 

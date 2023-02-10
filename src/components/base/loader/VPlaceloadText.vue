@@ -3,6 +3,7 @@ import { CssUnitRe } from '/@src/utils/regex'
 
 export interface VPlaceloadTextProps {
   width?: string
+  height?: string
   lastLineWidth?: string
   lines?: number
   disabled?: boolean
@@ -32,6 +33,7 @@ if (props.lastLineWidth.match(CssUnitRe) === null) {
       v-for="line of props.lines - 1"
       :key="line"
       :width="props.width"
+      :height="props.height"
       :centered="props.centered"
     />
     <VPlaceload :width="props.lastLineWidth" :centered="props.centered" />
