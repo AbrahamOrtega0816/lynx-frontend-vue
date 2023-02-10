@@ -1,0 +1,1 @@
+import{b as s,s as a,v as e,x as t,y as r}from"./chunk-BGPNDDXN-506e204f.js";const n=s({__name:"LandingLayout",props:{theme:{default:"darker"}},setup(s){const n=s;return(s,o)=>(a(),e("div",{class:r(["minimal-wrapper",[n.theme]])},[t(s.$slots,"default")],2))}});export{n as _};

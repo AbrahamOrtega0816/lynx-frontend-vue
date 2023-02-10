@@ -1,0 +1,1 @@
+import{a as e}from"./chunk-BGPNDDXN-506e204f.js";import{d as s}from"./pinia-6e3f481e.js";const t=s("viewWrapper",(()=>{const s=e(!1),t=e(!1),o=e("Welcome");return{isPushed:s,isPushedBlock:t,pageTitle:o,setPushed:function(e){s.value=e},setPushedBlock:function(e){t.value=e},setPageTitle:function(e){o.value=e}}}));export{t as u};

@@ -1,0 +1,1 @@
+import{b as e,s,v as p}from"./chunk-BGPNDDXN-506e204f.js";import{u as a}from"./@vueuse_head-f7c23dbc.js";import{u as t}from"./viewWrapper-e9daa8ff.js";import"./pinia-6e3f481e.js";const i={class:"page-content-inner"},r=e({__name:"index",setup:e=>(t().setPageTitle("App"),a({title:"App - Let'z"}),(e,a)=>(s(),p("div",i,"app")))});export{r as default};
