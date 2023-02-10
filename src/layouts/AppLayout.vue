@@ -11,8 +11,8 @@ const props = withDefaults(
     nowrap?: boolean
   }>(),
   {
-    defaultSidebar: 'Courses',
-    theme: 'labels-hover',
+    defaultSidebar: 'courses',
+    theme: 'default',
   }
 )
 
@@ -94,7 +94,7 @@ watch(
 
     <!-- Mobile subsidebar links -->
     <Transition name="slide-x">
-      <DashboardsMobileSubsidebar
+      <CoursesMobileSubsidebar
         v-if="isMobileSidebarOpen && activeMobileSubsidebar === 'courses'"
       />
     </Transition>
@@ -126,7 +126,7 @@ watch(
     </Sidebar>
 
     <Transition name="slide-x">
-      <DashboardsSubsidebar
+      <CoursesSubsidebar
         v-if="isDesktopSidebarOpen && activeMobileSubsidebar === 'courses'"
         @close="isDesktopSidebarOpen = false"
       />

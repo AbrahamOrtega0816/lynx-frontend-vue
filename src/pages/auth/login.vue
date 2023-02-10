@@ -51,7 +51,7 @@ const handleLogin = async () => {
           } = res
           userSession.setToken(authToken)
           userSession.setUser({ name, user_id })
-          router.push('/app')
+          router.push('/courses')
         } else {
           notyf.info(`${res.message}`)
         }

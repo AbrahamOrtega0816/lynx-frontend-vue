@@ -18,7 +18,7 @@ const emit = defineEmits(['close'])
     <div class="inner" data-simplebar>
       <ul>
         <li>
-          <RouterLink to="app">
+          <RouterLink to="courses">
             <i
               aria-hidden="true"
               class="iconify sidebar-svg p"

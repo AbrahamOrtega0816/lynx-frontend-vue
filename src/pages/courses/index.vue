@@ -2,13 +2,15 @@
 import { useHead } from '@vueuse/head'
 import { useViewWrapper } from '/@src/stores/viewWrapper'
 const viewWrapper = useViewWrapper()
-viewWrapper.setPageTitle('App')
+viewWrapper.setPageTitle('Courses')
 
 useHead({
-  title: "App - Let'z",
+  title: "Courses - Let'z",
 })
 </script>
 
 <template>
-  <div class="page-content-inner">app</div>
+  <div class="page-content-inner">
+    <CoursesList />
+  </div>
 </template>
