@@ -100,9 +100,9 @@ watch(
                     </template>
                     <template #action>
                       <VIconButton
-                        :disabled="activitie?.is_active"
+                        :disabled="!activitie?.is_active"
                         :icon="
-                          !activitie?.is_active
+                          activitie?.is_active
                             ? 'feather:arrow-right'
                             : 'grommet-icons:secure'
                         "

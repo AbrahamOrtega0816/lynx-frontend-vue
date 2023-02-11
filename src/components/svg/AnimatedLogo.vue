@@ -5,10 +5,7 @@ const darkmode = useDarkmode()
 const router = useRouter()
 const isLoading = ref(false)
 
-const getLogo = (theme: boolean) =>
-  theme ? '/public/images/letz/let_white.png' : '/public/images/letz/let_gray.png'
-
-const path = ref(getLogo(darkmode.isDark as boolean))
+const dark = ref(darkmode.isDark)
 
 router.beforeEach(() => {
   isLoading.value = true
@@ -23,11 +20,15 @@ router.afterEach(() => {
 watch(
   () => darkmode.isDark,
   (theme) => {
-    path.value = getLogo(theme as boolean)
+    dark.value = theme
   }
 )
 </script>
 
 <template>
-  <img :src="path" alt="Let'z" />
+  <!-- <img :src="path" alt="Let'z" /> -->
+  <div>
+    <img v-if="dark" src="/@src/assets/letz/let_white.png" alt="" />
+    <img v-else src="/@src/assets/letz/let_gray.png" alt="" />
+  </div>
 </template>
