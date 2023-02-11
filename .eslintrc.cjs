@@ -15,7 +15,7 @@ module.exports = {
     'plugin:vuejs-accessibility/recommended',
     'prettier',
   ],
-  plugins: ['frontmatter', '@typescript-eslint', 'prettier-vue'],
+  plugins: ['plugin:vue/recommended', 'plugin:prettier-vue/recommended'],
   rules: {
     'no-console': process.env.NODE_ENV === 'production' ? 'error' : 'off',
     'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',

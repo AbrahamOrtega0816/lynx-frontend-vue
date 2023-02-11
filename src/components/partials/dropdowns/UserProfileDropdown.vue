@@ -13,6 +13,8 @@ const logout = async () => {
   logoutUser()
   router.push('/')
 }
+
+const redirect = (route: string) => router.push(route)
 </script>
 <template>
   <VDropdown right spaced class="user-dropdown profile-dropdown">
@@ -37,7 +39,7 @@ const logout = async () => {
         </div>
       </div>
 
-      <a href="#" role="menuitem" class="dropdown-item is-media">
+      <div @click="redirect('/profile')" class="dropdown-item is-media">
         <div class="icon">
           <i aria-hidden="true" class="lnil lnil-user-alt"></i>
         </div>
@@ -45,7 +47,7 @@ const logout = async () => {
           <span>Profile</span>
           <span>View your profile</span>
         </div>
-      </a>
+      </div>
 
       <hr class="dropdown-divider" />
       <a href="#" role="menuitem" class="dropdown-item is-media">
