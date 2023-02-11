@@ -69,15 +69,10 @@ useHead({
                 </div>
               </div>
               <div class="column is-7">
-                <img
-                  class="light-image-l hero-mockup"
-                  src="/@src/assets/illustrations/landing/app-2.png"
-                  alt=""
-                />
-                <img
-                  class="dark-image-l hero-mockup"
-                  src="/@src/assets/illustrations/landing/app-2-dark.png"
-                  alt=""
+                <VPlyr
+                  ratio="16by9"
+                  source="https://www.youtube.com/watch?v=fZFzoTN-4Vg"
+                  poster="/video/poster-2c.jpg"
                 />
               </div>
             </div>

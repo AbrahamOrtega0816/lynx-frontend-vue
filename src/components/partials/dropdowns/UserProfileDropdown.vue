@@ -1,3 +1,19 @@
+<script setup lang="ts">
+import { useUserSession } from '/@src/stores/userSession'
+const router = useRouter()
+const {
+  user: { name },
+  logoutUser,
+} = useUserSession()
+
+const loading = ref(false)
+
+const logout = async () => {
+  loading.value = true
+  logoutUser()
+  router.push('/')
+}
+</script>
 <template>
   <VDropdown right spaced class="user-dropdown profile-dropdown">
     <template #button="{ toggle }">
@@ -15,9 +31,8 @@
     <template #content>
       <div class="dropdown-head">
         <VAvatar size="large" picture="/images/avatars/svg/vuero-1.svg" />
-
         <div class="meta">
-          <span>Erik Kovalsky</span>
+          <span class="is-capitalize">{{ name }}</span>
           <span>Product Manager</span>
         </div>
       </div>
@@ -33,29 +48,6 @@
       </a>
 
       <hr class="dropdown-divider" />
-
-      <a href="#" role="menuitem" class="dropdown-item is-media">
-        <div class="icon">
-          <i aria-hidden="true" class="lnil lnil-briefcase"></i>
-        </div>
-        <div class="meta">
-          <span>Projects</span>
-          <span>All my projects</span>
-        </div>
-      </a>
-
-      <a href="#" role="menuitem" class="dropdown-item is-media">
-        <div class="icon">
-          <i aria-hidden="true" class="lnil lnil-users-alt"></i>
-        </div>
-        <div class="meta">
-          <span>Team</span>
-          <span>Manage your team</span>
-        </div>
-      </a>
-
-      <hr class="dropdown-divider" />
-
       <a href="#" role="menuitem" class="dropdown-item is-media">
         <div class="icon">
           <i aria-hidden="true" class="lnil lnil-cog"></i>
@@ -76,6 +68,9 @@
           role="menuitem"
           raised
           fullwidth
+          :loading="loading"
+          :disabled="loading"
+          @click="logout()"
         >
           Logout
         </VButton>

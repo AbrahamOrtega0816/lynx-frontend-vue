@@ -26,7 +26,6 @@ watch(
 </script>
 
 <template>
-  <!-- <img :src="path" alt="Let'z" /> -->
   <div>
     <img v-if="dark" src="/@src/assets/letz/let_white.png" alt="" />
     <img v-else src="/@src/assets/letz/let_gray.png" alt="" />

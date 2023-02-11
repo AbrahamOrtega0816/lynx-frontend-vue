@@ -11,9 +11,18 @@ const {
   user: { name },
 } = useUserSession()
 
+const { id } = withDefaults(
+  defineProps<{
+    id: number
+  }>(),
+  {
+    id: 0,
+  }
+)
+
 const getCourseDetail = async () => {
   const response = await courseService
-    .getCourseDetail(9)
+    .getCourseDetail(id)
     .then((res) => {
       if (res.status === 200) {
         return res.data
@@ -28,7 +37,7 @@ const getCourseDetail = async () => {
 }
 
 const { data: courseDetail, isLoading } = useQuery({
-  queryKey: ['course-detail'],
+  queryKey: ['course-detail', id],
   queryFn: getCourseDetail,
   refetchOnWindowFocus: false,
 })
@@ -92,7 +101,7 @@ const { data: courseDetail, isLoading } = useQuery({
     .header-image {
       position: relative;
       height: 195px;
-      width: 320px;
+      width: 520px;
 
       img {
         position: absolute;
@@ -142,44 +151,6 @@ const { data: courseDetail, isLoading } = useQuery({
     .illustration-header-2 {
       background: var(--dark-sidebar);
       box-shadow: none;
-    }
-
-    .writing-stats {
-      .writing-stat {
-        @include vuero-card--dark;
-      }
-    }
-
-    .updates,
-    .featured-authors {
-      @include vuero-card--dark;
-    }
-
-    .articles-feed {
-      background: var(--dark-sidebar-light-8);
-
-      .articles-feed-subheader {
-        .selector {
-          .button {
-            &.is-selected {
-              background: var(--primary) !important;
-              border-color: var(--primary) !important;
-              box-shadow: var(--primary-box-shadow) !important;
-              color: var(--white) !important;
-            }
-          }
-        }
-      }
-
-      .articles-feed-list {
-        .articles-feed-list-inner {
-          .articles-feed-item {
-            .featured-content {
-              background: var(--dark-sidebar);
-            }
-          }
-        }
-      }
     }
   }
 }
