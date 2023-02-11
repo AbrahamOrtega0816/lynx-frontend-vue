@@ -4,6 +4,8 @@ import { useHead } from '@vueuse/head'
 useHead({
   title: "Let'z",
 })
+
+const router = useRouter()
 </script>
 
 <template>
@@ -65,7 +67,15 @@ useHead({
                   Education Is A Path To Success In Life
                 </h3>
                 <div class="buttons">
-                  <VButton color="primary" bold rounded raised> Get Started </VButton>
+                  <VButton
+                    color="primary"
+                    bold
+                    rounded
+                    raised
+                    @click="router.push('/auth/signup')"
+                  >
+                    Get Started
+                  </VButton>
                 </div>
               </div>
               <div class="column is-7">

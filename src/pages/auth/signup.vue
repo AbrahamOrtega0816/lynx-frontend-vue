@@ -61,7 +61,7 @@ const onAvatarChanged = (info: any) => {
 }
 
 useHead({
-  title: 'Auth Signup 1 - Vuero',
+  title: "Auth Signup - Let'z",
 })
 
 onMounted(() => {
@@ -153,7 +153,7 @@ onUnmounted(() => {
             <div class="columns signup-columns" :class="[step !== 0 && 'is-hidden']">
               <div class="column is-4 is-offset-1">
                 <h1 id="main-signup-title" class="title is-3 signup-title">
-                  Become a Vuero
+                  Become a Let'z
                 </h1>
                 <h2 id="main-signup-subtitle" class="subtitle signup-subtitle">
                   And simply join an unmatched design experience.
