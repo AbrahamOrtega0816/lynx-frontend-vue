@@ -46,12 +46,28 @@ const { data: courseDetail, isLoading } = useQuery({
               alt=""
             />
           </div>
+          <!--List Loading Placeholder -->
           <div class="header-meta">
-            <h3>Hello, {{ name }}</h3>
-            <h3 class="pt-3 is-capitalize">{{ courseDetail?.name }}</h3>
-            <p class="pt-3">
-              {{ courseDetail?.description }}
-            </p>
+            <div :class="[!isLoading && 'is-hidden']">
+              <div class="colums is-multiline">
+                <div class="colum mt-3">
+                  <VPlaceloadText width="350px" />
+                </div>
+                <div class="colum mt-6">
+                  <VPlaceloadText width="350px" />
+                </div>
+                <div class="colum mt-2">
+                  <VPlaceloadText :lines="1" width="350px" />
+                </div>
+              </div>
+            </div>
+            <div v-if="!isLoading">
+              <h3>Hello, {{ name }}</h3>
+              <h3 class="pt-3 is-capitalize">{{ courseDetail?.name }}</h3>
+              <p class="pt-3">
+                {{ courseDetail?.description }}
+              </p>
+            </div>
           </div>
         </div>
       </div>

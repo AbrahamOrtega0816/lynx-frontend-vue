@@ -1,17 +1,27 @@
 <!-- eslint-disable prettier-vue/prettier -->
 <script setup lang="ts">
-import { tns, type TinySliderInstance } from 'tiny-slider/src/tiny-slider'
+import type { TinySliderInstance } from 'tiny-slider/src/tiny-slider'
+import { tns } from 'tiny-slider/src/tiny-slider'
 import { useQuery } from 'vue-query'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { lessonsService } from '/@src/services'
 import sleep from '/@src/utils/sleep'
+
+interface lesson {
+  id: number
+  name: string
+}
+
+export interface VCoursesActivities {
+  (e: 'haslessonClick', lesson: lesson): void
+}
 
 let slider: TinySliderInstance
 const sliderElement = ref<HTMLElement>()
 const nextButtonElement = ref<HTMLElement>()
 const prevButtonElement = ref<HTMLElement>()
 
-const { id } = withDefaults(
+const props = withDefaults(
   defineProps<{
     id: number
   }>(),
@@ -26,6 +36,13 @@ const onIndexChanged = (info: any) => {
   // direct access to info object
   const indexPrev = info.indexCached
   const indexCurrent = info.index
+
+  const lesson: lesson = {
+    id: Number(info.slideItems[indexCurrent].classList[0].split('-')[2]),
+    name: info.slideItems[indexCurrent].querySelectorAll('span')[0].innerHTML,
+  }
+
+  emit('haslessonClick', lesson)
 
   // update style based on index
   info.slideItems[indexPrev].classList.remove('active')
@@ -68,7 +85,7 @@ onUnmounted(() => {
 
 const getLessonsGroups = async () => {
   const response = await lessonsService
-    .getLessonsGroups(id)
+    .getLessonsGroups(props.id)
     .then((res) => {
       if (res.status === 200) {
         return res.data.groups_lessons
@@ -91,6 +108,8 @@ const { data: lessonsGroup = [], isLoading } = await useQuery({
     mountedSlider()
   },
 })
+
+const emit = defineEmits<VCoursesActivities>()
 
 const isFinish = ref(false)
 </script>
@@ -120,7 +139,9 @@ const isFinish = ref(false)
               <!--Pills Loop-->
               <div
                 v-for="(item, index) in lessonsGroup"
+                :id="item.id"
                 :key="item.id"
+                :class="[`lesson-id-${item.id}`, 'lesson-pill']"
                 class="lesson-pill"
                 tabindex="0"
                 @keydown.space.prevent="goTo(index)"

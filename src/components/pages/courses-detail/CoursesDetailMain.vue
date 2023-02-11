@@ -2,6 +2,7 @@
 <script lang="ts" setup>
 const route = useRoute()
 const { id } = route.params
+const lessonData = ref(null)
 </script>
 <!-- eslint-disable prettier-vue/prettier -->
 <template>
@@ -10,9 +11,14 @@ const { id } = route.params
       <CoursesDescription :id="id" />
     </div>
     <div class="column is-5">
-      <CoursesLessonsGroup :id="id" />
+      <CoursesLessonsGroup
+        :id="id"
+        @haslesson-click="(lesson) => (lessonData = lesson)"
+      />
     </div>
-    <div class="column">xxxxxx</div>
+    <div class="column">
+      <CoursesActivities :lesson-id="lessonData?.id" :lesson-name="lessonData?.name" />
+    </div>
   </div>
 </template>
 

@@ -6,7 +6,7 @@ const router = useRouter()
 const isLoading = ref(false)
 
 const getLogo = (theme: boolean) =>
-  theme ? '/@src/assets/letz/let_white.png' : '/@src/assets/letz/let_gray.png'
+  theme ? '/public/images/letz/let_white.png' : '/public/images/letz/let_gray.png'
 
 const path = ref(getLogo(darkmode.isDark as boolean))
 

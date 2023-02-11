@@ -11,6 +11,7 @@ declare module '@vue/runtime-core' {
     AppLayout: typeof import('./src/layouts/AppLayout.vue')['default']
     AuthLayout: typeof import('./src/layouts/AuthLayout.vue')['default']
     ClientOnly: typeof import('./src/components/ClientOnly.vue')['default']
+    CoursesActivities: typeof import('./src/components/pages/courses-detail/courses-activities/CoursesActivities.vue')['default']
     CoursesCard: typeof import('./src/components/pages/courses/courses-card/CoursesCard.vue')['default']
     CoursesDescription: typeof import('./src/components/pages/courses-detail/course-description/CoursesDescription.vue')['default']
     CoursesDetailMain: typeof import('./src/components/pages/courses-detail/CoursesDetailMain.vue')['default']
