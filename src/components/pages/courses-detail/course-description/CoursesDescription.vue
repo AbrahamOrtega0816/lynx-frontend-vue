@@ -1,4 +1,3 @@
-<!-- eslint-disable prettier-vue/prettier -->
 <script lang="ts" setup>
 import { useQuery } from 'vue-query'
 import { useNotyf } from '/@src/composable/useNotyf'
@@ -42,7 +41,7 @@ const { data: courseDetail, isLoading } = useQuery({
   refetchOnWindowFocus: false,
 })
 </script>
-<!-- eslint-disable prettier-vue/prettier -->
+
 <template>
   <div class="lifestyle-dashboard lifestyle-dashboard-v4">
     <div class="columns is-multiline">
@@ -84,7 +83,6 @@ const { data: courseDetail, isLoading } = useQuery({
   </div>
 </template>
 
-<!-- eslint-disable prettier-vue/prettier -->
 <style lang="scss">
 @import '/@src/scss/abstracts/all';
 

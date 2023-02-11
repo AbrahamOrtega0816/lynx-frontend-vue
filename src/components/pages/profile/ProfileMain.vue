@@ -1,3 +1,59 @@
+<script setup lang="ts">
+import { useQuery } from 'vue-query'
+import { userService } from '/@src/services'
+import { useNotyf } from '/@src/composable/useNotyf'
+import { useUserSession } from '/@src/stores/userSession'
+import { useForm } from 'vee-validate'
+
+const notyf = useNotyf()
+
+const {
+  user: { user_id },
+} = useUserSession()
+
+const initialValues = {
+  image: null,
+  name: '',
+  last_name: '',
+  english_level: '',
+  identification: '',
+  phone: '',
+  age: '',
+  country: '',
+}
+
+const form = reactive(
+  useForm({
+    initialValues: initialValues,
+  })
+)
+
+const getProfile = async () => {
+  const reponse = await userService
+    .getusersById(user_id as number)
+    .then((res) => {
+      if (res.status === 200) {
+        return res.data
+      } else {
+        notyf.info(`${res.message}`)
+      }
+    })
+    .catch((err) => {
+      notyf.error(`${err.message}`)
+    })
+  return reponse
+}
+
+const { data: profile = null, isLoading } = useQuery({
+  queryKey: ['userProfile'],
+  queryFn: getProfile,
+  refetchOnWindowFocus: false,
+  onSuccess(data) {
+    form.resetForm({ values: { ...initialValues, ...data } })
+  },
+})
+</script>
+
 <template>
   <div class="page-content-inner">
     <!--Edit Profile-->
@@ -6,7 +62,11 @@
         <!--Navigation-->
         <div class="column is-4">
           <div class="account-box is-navigation">
-            <VBlock title="Erik Kovalsky" subtitle="Product Manager" center>
+            <VBlock
+              :title="`${profile?.name} ${profile?.last_name}`"
+              subtitle="Product Manager"
+              center
+            >
               <template #icon>
                 <VAvatar
                   size="large"
@@ -35,7 +95,7 @@
           </div>
         </div>
         <div class="column is-8">
-          <ProfileEditInfo />
+          <ProfileEditInfo :loading="isLoading" />
         </div>
       </div>
     </div>

@@ -14,7 +14,7 @@ const userSession = useUserSession()
 
 const validationSchema = markRaw(
   yup.object({
-    email: yup.string().email().required(),
+    user_name: yup.string().email().required(),
     password: yup.string().min(6).required(),
   })
 )
@@ -22,7 +22,7 @@ const validationSchema = markRaw(
 const form = reactive(
   useForm({
     initialValues: {
-      email: '',
+      user_name: '',
       password: '',
     },
     validationSchema,
@@ -47,9 +47,9 @@ const handleLogin = async () => {
       .then(async (res) => {
         if (res.status === 200) {
           const {
-            data: { authToken, name, user_id },
+            data: { token, name, user_id },
           } = res
-          userSession.setToken(authToken)
+          userSession.setToken(token)
           userSession.setUser({ name, user_id })
           router.push('/courses')
         } else {
@@ -111,7 +111,7 @@ useHead({
         <div class="form-card">
           <form @submit.prevent="handleLogin">
             <div class="login-form">
-              <AsyncField v-slot="{ handleChange, field }" :name="`email`">
+              <AsyncField v-slot="{ handleChange, field }" :name="`user_name`">
                 <VField>
                   <VControl icon="feather:user">
                     <VInput

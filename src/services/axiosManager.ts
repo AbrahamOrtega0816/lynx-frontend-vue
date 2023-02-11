@@ -21,7 +21,7 @@ const ACCEPT = 'application/json'
 instance.defaults.headers.post['Content-Type'] = CONTENT_TYPE
 instance.defaults.headers.common['Accept'] = ACCEPT
 
-instance.interceptors.request.use((config) => {
+instance.interceptors.request.use((config : AxiosInstance) => {
   const userSession = useUserSession()
 
   if (userSession.isLoggedIn) {
@@ -36,10 +36,10 @@ instance.interceptors.request.use((config) => {
 
 instance.interceptors.response.use(
   (response: AxiosResponse) => {
-    const { data, status }: { data: AxiosResponse } = response
+    const { data, status }: { data: AxiosResponse,status:string } = response
     return { ...data, status }
   },
-  async (error) => {
+  async (error : AxiosResponse) => {
     if (error.response.status === 401) {
       console.log('logout')
     }
