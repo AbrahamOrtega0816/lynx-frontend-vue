@@ -12,9 +12,13 @@
             <i aria-hidden="true" class="iconify" data-icon="feather:chevron-right" />
           </template>
 
-          <RouterLink to="app" class="is-submenu">
-            <i aria-hidden="true" class="lnil lnil-home" />
-            <span>Home</span>
+          <RouterLink to="/courses">
+            <i
+              aria-hidden="true"
+              class="iconify sidebar-svg p"
+              data-icon="fluent-mdl2:publish-course"
+            />
+            Courses
           </RouterLink>
         </VCollapseLinks>
       </ul>
