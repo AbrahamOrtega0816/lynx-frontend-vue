@@ -1,10 +1,9 @@
 <script setup lang="ts">
+import { storeToRefs } from 'pinia'
 import { useUserSession } from '/@src/stores/userSession'
 const router = useRouter()
-const {
-  user: { name, image },
-  logoutUser,
-} = useUserSession()
+
+const { logoutUser } = useUserSession()
 
 const loading = ref(false)
 
@@ -13,6 +12,8 @@ const logout = async () => {
   logoutUser()
   router.push('/')
 }
+
+const { user } = storeToRefs(useUserSession())
 
 const redirect = (route: string) => router.push(route)
 </script>
@@ -26,15 +27,15 @@ const redirect = (route: string) => router.push(route)
         @keydown.space.prevent="toggle"
         @click="toggle"
       >
-        <VAvatar :picture="image" />
+        <VAvatar :picture="user.image" />
       </a>
     </template>
 
     <template #content>
       <div class="dropdown-head">
-        <VAvatar size="large" :picture="image" />
+        <VAvatar size="large" :picture="user.image" />
         <div class="meta">
-          <span class="is-capitalize">{{ name }}</span>
+          <span class="is-capitalize">{{ user.name }}</span>
           <span>Product Manager</span>
         </div>
       </div>

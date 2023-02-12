@@ -5,12 +5,13 @@ import { useNotyf } from '/@src/composable/useNotyf'
 import { useUserSession } from '/@src/stores/userSession'
 import { useForm } from 'vee-validate'
 import { omit } from 'lodash'
-import { IUser } from '/@src/models/user'
+import { IUser, IUserData } from '/@src/models/user'
 
 const notyf = useNotyf()
 
 const {
   user: { user_id },
+  setUser,
 } = useUserSession()
 
 const initialValues = {
@@ -74,6 +75,8 @@ const putUpdateUserProfile = async (image: string) => {
     .putUpdateUserProfile(user_id as number, params)
     .then((res) => {
       if (res.status === 200) {
+        const { name, image, score, id } = res.data
+        setUser({ name, image, score, user_id: id } as IUserData)
         notyf.success('Your changes have been successfully saved!')
         refetch.value()
       } else {

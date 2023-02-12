@@ -41,7 +41,7 @@ const {
       >
         <i aria-hidden="true" class="iconify" data-icon="emojione:fire" />
         <span class="icon-button__badge">{{
-          `${racha.toString.length > 2 ? `${String(racha).slice(0, 2)}+` : `${racha}`}`
+          `${racha?.toString?.length > 2 ? `${String(racha).slice(0, 2)}+` : `${racha}`}`
         }}</span>
       </div>
     </div>
@@ -52,7 +52,7 @@ const {
       >
         <i aria-hidden="true" class="iconify" data-icon="bxs:coin-stack" />
         <span class="icon-button__badge">{{
-          `${score.toString.length > 2 ? `${String(score).slice(0, 2)}+` : `${score}`}`
+          `${score?.toString?.length > 2 ? `${String(score).slice(0, 2)}+` : `${score}`}`
         }}</span>
       </div>
     </div>
