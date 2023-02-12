@@ -1,5 +1,6 @@
 <!-- eslint-disable prettier-vue/prettier -->
 <script setup lang="ts">
+import { useNotyf } from '/@src/composable/useNotyf'
 import { onceImageErrored } from '/@src/utils/via-placeholder'
 
 defineProps<{
@@ -7,9 +8,19 @@ defineProps<{
   isLoading?: boolean
 }>()
 
+const notyf = useNotyf()
+
 const router = useRouter()
 
-const rediretToCoursesDetail = (id: number) => router.push(`courses/detail/${id}`)
+const rediretToCoursesDetail = (id: number, active: boolean) => {
+  if (active) {
+    router.push(`courses/detail/${id}`)
+  } else {
+    notyf.info(
+      `We are sorry at this moment we do not have this course available, we will work to make it available soon`
+    )
+  }
+}
 </script>
 
 <!-- eslint-disable prettier-vue/prettier -->
@@ -99,9 +110,9 @@ const rediretToCoursesDetail = (id: number) => router.push(`courses/detail/${id}
         class="column is-6-tablet is-4-desktop is-3-fullhd"
       >
         <div
-          class="card-grid-item is-clickable"
-          @click="rediretToCoursesDetail(course.id)"
-          @keydown="rediretToCoursesDetail(course.id)"
+          :class="`card-grid-item is-clickable ${!course.is_active && 'disabled'}`"
+          @click="rediretToCoursesDetail(course.id, course.is_active)"
+          @keydown="rediretToCoursesDetail(course.id, course.is_active)"
         >
           <img
             :src="course.image"
@@ -116,6 +127,7 @@ const rediretToCoursesDetail = (id: number) => router.push(`courses/detail/${id}
               <VIconWrap
                 icon="mdi:heart-multiple"
                 :color="course.is_favorite ? 'danger' : 'primary'"
+                class="favorite"
               />
             </div>
             <h3 class="dark-inverted is-capitalized">
@@ -131,6 +143,7 @@ const rediretToCoursesDetail = (id: number) => router.push(`courses/detail/${id}
                 solid
                 icon="feather:life-buoy"
                 size="small"
+                class="level"
               />
               <div class="meta">
                 <i class="fas fa-star warning-text" />
@@ -224,20 +237,6 @@ const rediretToCoursesDetail = (id: number) => router.push(`courses/detail/${id}
   }
 }
 
-.progress-meta {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 0.75rem;
-
-  label {
-    font-family: var(--font);
-    font-size: 0.9rem;
-    color: var(--light-text) !important;
-    font-weight: 400;
-  }
-}
-
 .is-dark {
   .card-grid-v4 {
     .card-grid-item {
@@ -256,6 +255,34 @@ const rediretToCoursesDetail = (id: number) => router.push(`courses/detail/${id}
       width: 33.3%;
       min-width: 33.3%;
     }
+  }
+}
+
+.disabled {
+  pointer-events: none;
+  opacity: 0.4;
+
+  img {
+    -webkit-filter: grayscale(100%);
+    filter: grayscale(100%);
+  }
+
+  .is-capitalized {
+    filter: grayscale(100%);
+  }
+
+  .meta {
+    i {
+      filter: grayscale(100%);
+    }
+  }
+
+  .level {
+    filter: grayscale(100%);
+  }
+
+  .favorite {
+    filter: grayscale(100%);
   }
 }
 </style>
