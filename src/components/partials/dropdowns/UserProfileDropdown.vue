@@ -2,7 +2,7 @@
 import { useUserSession } from '/@src/stores/userSession'
 const router = useRouter()
 const {
-  user: { name },
+  user: { name, image },
   logoutUser,
 } = useUserSession()
 
@@ -26,13 +26,13 @@ const redirect = (route: string) => router.push(route)
         @keydown.space.prevent="toggle"
         @click="toggle"
       >
-        <VAvatar picture="/images/avatars/svg/vuero-1.svg" />
+        <VAvatar :picture="image" />
       </a>
     </template>
 
     <template #content>
       <div class="dropdown-head">
-        <VAvatar size="large" picture="/images/avatars/svg/vuero-1.svg" />
+        <VAvatar size="large" :picture="image" />
         <div class="meta">
           <span class="is-capitalize">{{ name }}</span>
           <span>Product Manager</span>

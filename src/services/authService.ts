@@ -9,7 +9,7 @@ const AuthServices = (api: AxiosInstance) => ({
   },
   postchangePassword: async (params: any) => {
     const response = await api
-      .post(`auth/change-password`, params)
+      .post(`oauth/change-password`, params)
       .then((res: AxiosResponse) => {
         return res
       })

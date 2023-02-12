@@ -6,6 +6,8 @@ import { useNotyf } from '/@src/composable/useNotyf'
 import * as yup from 'yup'
 import { Field, useForm } from 'vee-validate'
 import { authService } from '/@src/services'
+import { omit } from 'lodash'
+import { IUserData } from '/@src/models/user'
 const isLoading = ref(false)
 const darkmode = useDarkmode()
 const router = useRouter()
@@ -46,11 +48,10 @@ const handleLogin = async () => {
       .postLogin(values)
       .then(async (res) => {
         if (res.status === 200) {
-          const {
-            data: { token, name, user_id },
-          } = res
+          const { data } = res
+          const { token } = data
           userSession.setToken(token)
-          userSession.setUser({ name, user_id })
+          userSession.setUser({ ...omit({ ...data }, ['token']) } as IUserData)
           router.push('/courses')
         } else {
           notyf.info(`${res.message}`)

@@ -4,6 +4,8 @@ import { userService } from '/@src/services'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { useUserSession } from '/@src/stores/userSession'
 import { useForm } from 'vee-validate'
+import { omit } from 'lodash'
+import { IUser } from '/@src/models/user'
 
 const notyf = useNotyf()
 
@@ -44,7 +46,11 @@ const getProfile = async () => {
   return reponse
 }
 
-const { data: profile = null, isLoading } = useQuery({
+const {
+  data: profile = null,
+  isLoading,
+  refetch,
+} = useQuery<IUser>({
   queryKey: ['userProfile'],
   queryFn: getProfile,
   refetchOnWindowFocus: false,
@@ -52,6 +58,34 @@ const { data: profile = null, isLoading } = useQuery({
     form.resetForm({ values: { ...initialValues, ...data } })
   },
 })
+
+const putUpdateUserProfile = async (image: string) => {
+  const params = {
+    ...omit({ ...form.values, image }, [
+      'role',
+      'score',
+      'racha',
+      'finished_courses',
+      'firstName',
+      'country',
+    ]),
+  }
+  await userService
+    .putUpdateUserProfile(user_id as number, params)
+    .then((res) => {
+      if (res.status === 200) {
+        notyf.success('Your changes have been successfully saved!')
+        refetch.value()
+      } else {
+        notyf.info(`${res.message}`)
+      }
+    })
+    .catch((err) => {
+      notyf.error(`${err.message}`)
+    })
+}
+
+const indexView = ref(0)
 </script>
 
 <template>
@@ -70,23 +104,33 @@ const { data: profile = null, isLoading } = useQuery({
               <template #icon>
                 <VAvatar
                   size="large"
-                  picture="/images/avatars/svg/vuero-1.svg"
+                  :picture="profile?.image"
                   badge="/images/icons/flags/united-states-of-america.svg"
                 />
               </template>
             </VBlock>
 
             <div class="account-menu">
-              <div class="account-menu-item active">
+              <div
+                @click="indexView = 0"
+                :class="`account-menu-item is-clickable ${indexView === 0 && 'active'}`"
+              >
                 <i aria-hidden="true" class="lnil lnil-user-alt"></i>
                 <span>General</span>
                 <span class="end">
                   <i aria-hidden="true" class="fas fa-arrow-right"></i>
                 </span>
               </div>
-              <div class="account-menu-item">
-                <i aria-hidden="true" class="lnil lnil-cog"></i>
-                <span>Settings</span>
+              <div
+                @click="indexView = 1"
+                :class="`account-menu-item is-clickable ${indexView === 1 && 'active'}`"
+              >
+                <i
+                  aria-hidden="true"
+                  data-icon="healthicons:ui-secure-outline"
+                  class="iconify"
+                ></i>
+                <span>Security</span>
                 <span class="end">
                   <i aria-hidden="true" class="fas fa-arrow-right"></i>
                 </span>
@@ -95,7 +139,12 @@ const { data: profile = null, isLoading } = useQuery({
           </div>
         </div>
         <div class="column is-8">
-          <ProfileEditInfo :loading="isLoading" />
+          <ProfileEditInfo
+            @click-update-profile="putUpdateUserProfile"
+            v-if="indexView === 0"
+            :loading="isLoading"
+          />
+          <ProfileChangePassword v-if="indexView === 1" />
         </div>
       </div>
     </div>
@@ -145,6 +194,7 @@ const { data: profile = null, isLoading } = useQuery({
             border-color: var(--fade-grey-dark-3);
 
             span,
+            svg,
             i {
               color: var(--primary);
             }
@@ -160,7 +210,8 @@ const { data: profile = null, isLoading } = useQuery({
             }
           }
 
-          i {
+          i,
+          svg {
             margin-right: 8px;
             font-size: 1.1rem;
             color: var(--light-text);
@@ -303,7 +354,8 @@ const { data: profile = null, isLoading } = useQuery({
                   }
                 }
 
-                i {
+                i,
+                svg {
                   font-size: 1.4rem;
                 }
               }
@@ -336,7 +388,8 @@ const { data: profile = null, isLoading } = useQuery({
                     font-size: 0.85rem;
                     color: var(--light-text);
 
-                    i {
+                    i,
+                    svg {
                       position: relative;
                       top: -2px;
                       font-size: 4px;
@@ -378,6 +431,7 @@ const { data: profile = null, isLoading } = useQuery({
               border-color: var(--dark-sidebar-light-12);
 
               i,
+              svg,
               span {
                 color: var(--primary);
               }

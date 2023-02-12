@@ -1,10 +1,14 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { useStorage } from '@vueuse/core'
+import { IUserData } from '../models/user'
 
-export type UserData = {
-  name?: string
-  user_id?: number
+const userValues = {
+  user_id: 0,
+  name: '',
+  racha: '',
+  score: 0,
+  image: '',
 }
 
 export const useUserSession = defineStore('userSession', () => {
@@ -12,12 +16,12 @@ export const useUserSession = defineStore('userSession', () => {
   // @see https://vueuse.org/core/usestorage/
   const token = useStorage('token', '')
 
-  const user = useStorage<UserData>('user', {})
+  const user = useStorage<IUserData>('user', userValues)
   const loading = ref(true)
 
   const isLoggedIn = computed(() => token.value !== undefined && token.value !== '')
 
-  function setUser(newUser: UserData) {
+  function setUser(newUser: IUserData) {
     user.value = newUser
   }
 

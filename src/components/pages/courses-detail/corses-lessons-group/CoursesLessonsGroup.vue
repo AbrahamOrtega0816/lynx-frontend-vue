@@ -12,7 +12,7 @@ interface lesson {
   name: string
 }
 
-export interface VCoursesActivities {
+interface VCoursesActivities {
   (e: 'haslessonClick', lesson: lesson): void
 }
 
@@ -144,8 +144,8 @@ const isFinish = ref(false)
                 :class="[`lesson-id-${item.id}`, 'lesson-pill']"
                 class="lesson-pill"
                 tabindex="0"
-                @keydown.space.prevent="goTo(index)"
-                @click="goTo(index)"
+                @keydown.space.prevent="goTo(index as number)"
+                @click="goTo(index as number)"
               >
                 <div class="colums">
                   <div class="columm is-flex is-justify-content-center">

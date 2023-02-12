@@ -44,6 +44,7 @@ declare module '@vue/runtime-core' {
     MobileSidebar: typeof import('./src/components/navigation/mobile/MobileSidebar.vue')['default']
     NotificationPage: typeof import('./src/layouts/profile/NotificationPage.vue')['default']
     NotificationsMobileDropdown: typeof import('./src/components/partials/dropdowns/NotificationsMobileDropdown.vue')['default']
+    ProfileChangePassword: typeof import('./src/components/pages/profile/profile-change-password/ProfileChangePassword.vue')['default']
     ProfileEditInfo: typeof import('./src/components/pages/profile/profile-edit-info/ProfileEditInfo.vue')['default']
     ProfileMain: typeof import('./src/components/pages/profile/ProfileMain.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']

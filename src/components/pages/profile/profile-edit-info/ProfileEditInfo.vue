@@ -1,34 +1,58 @@
 <script setup lang="ts">
-import { Field } from 'vee-validate'
-import { useNotyf } from '/@src/composable/useNotyf'
-import sleep from '/@src/utils/sleep'
+import { Field, useField } from 'vee-validate'
 import { onceImageErrored } from '/@src/utils/via-placeholder'
-import { userService } from '/@src/services'
-import { useUserSession } from '/@src/stores/userSession'
-const isUploading = ref(false)
-const isLoading = ref(false)
 
-const notyf = useNotyf()
+defineProps<{
+  loading?: boolean
+}>()
+interface VProfileEditInfoEmits {
+  (e: 'clickUpdateProfile', avatar: string): void
+}
+const emit = defineEmits<VProfileEditInfoEmits>()
+
 const { y } = useWindowScroll()
+
+const { value: src } = useField('image')
 
 const isScrolling = computed(() => {
   return y.value > 30
 })
 
-const onAddFile = (error: any, file: any) => {
+const newAvatar = ref('')
+const isUploading = ref(false)
+
+const convertBase64 = (file: File) => {
+  return new Promise((resolve, reject) => {
+    const fileReader = new FileReader()
+    fileReader.readAsDataURL(file)
+
+    fileReader.onload = () => {
+      resolve(fileReader.result)
+    }
+
+    fileReader.onerror = (error) => {
+      reject(error)
+    }
+  })
+}
+
+const onAddFile = async (error: any, file: any) => {
   if (error) {
     console.error(error)
     return
+  } else {
+    const base64 = await convertBase64(file.file)
+    newAvatar.value = base64 as string
   }
-
-  console.log('file added', file)
 }
+
 const onRemoveFile = (error: any, file: any) => {
   if (error) {
     console.error(error)
     return
+  } else {
+    newAvatar.value = src.value as string
   }
-
   console.log('file removed', file)
 }
 
@@ -37,42 +61,7 @@ const AsyncField = defineAsyncComponent({
 })
 
 const onSave = async () => {
-  isLoading.value = true
-  await sleep()
-  notyf.success('Your changes have been successfully saved!')
-  isLoading.value = false
-}
-
-defineProps<{
-  loading?: boolean
-}>()
-
-const {
-  user: { user_id },
-} = useUserSession()
-
-const putUpdateUserProfile = async () => {
-  isLoading.value = true
-  // const params = {
-  //  ...omit(getValues(), ['role', 'score', 'racha','finished_courses','firstName','country'])
-  // }
-  const params = {}
-
-  await userService
-    .putUpdateUserProfile(user_id as number, params)
-    .then((res) => {
-      if (res.status === 200) {
-        notyf.success('Your changes have been successfully saved!')
-      } else {
-        notyf.info(`${res.message}`)
-      }
-    })
-    .catch((err) => {
-      notyf.error(`${err.message}`)
-    })
-    .finally(() => {
-      isLoading.value = false
-    })
+  emit('clickUpdateProfile', newAvatar.value)
 }
 </script>
 
@@ -89,7 +78,7 @@ const putUpdateUserProfile = async () => {
             <VButton
               color="primary"
               raised
-              :loading="isLoading"
+              :loading="loading"
               tabindex="0"
               @keydown.space.prevent="onSave"
               @click="onSave"
@@ -120,7 +109,7 @@ const putUpdateUserProfile = async () => {
             <img
               v-if="!isUploading"
               class="avatar"
-              src="/images/avatars/svg/vuero-1.svg"
+              :src="(src as string)"
               alt=""
               @error.once="onceImageErrored(150)"
             />
