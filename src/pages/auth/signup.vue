@@ -7,8 +7,12 @@ import { onceImageErrored } from '/@src/utils/via-placeholder'
 import sleep from '/@src/utils/sleep'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { useDarkmode } from '/@src/stores/darkmode'
-import { Field, useForm } from 'vee-validate'
+import { Field, useForm, ErrorMessage } from 'vee-validate'
 import * as yup from 'yup'
+import { authService } from '/@src/services'
+import { useUserSession } from '/@src/stores/userSession'
+import { omit } from 'lodash'
+import { IUserData } from '/@src/models/user'
 
 let slider: TinySliderInstance
 const sliderElement = ref<HTMLElement>()
@@ -36,32 +40,7 @@ const avatars = [
   '/images/avatars/svg/vuero-12.svg',
 ]
 
-const handleSignup = async () => {
-  if (!isLoading.value) {
-    step.value++
-    isLoading.value = true
-    sleep(2000)
-
-    notyf.dismissAll()
-    notyf.success('Welcome, Erik Kovalsky')
-    router.push('/sidebar/dashboards')
-    isLoading.value = false
-  }
-}
-
-const onAvatarChanged = (info: any) => {
-  // direct access to info object
-  const indexPrev = info.indexCached
-  const indexCurrent = info.index
-
-  // update style based on index
-  info.slideItems[indexPrev].classList.remove('active')
-  info.slideItems[indexCurrent].classList.add('active')
-
-  if (info.displayIndex) {
-    selectedAvatar.value = info.displayIndex - 1
-  }
-}
+const userSession = useUserSession()
 
 useHead({
   title: "Auth Signup - Let'z",
@@ -77,14 +56,26 @@ const validationSchema = markRaw(
     email: yup
       .string()
       .email()
-      .test('Validate Email', 'Validate Email Formt', (value) => {
+      .test('Validate Email', 'Enter a valid email address', (value) => {
         const re =
           /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
         return re.test(String(value).toLowerCase())
       })
       .required(),
     last_name: yup.string().required(),
-    identification: yup.number().min(5).required(),
+    identification: yup
+      .string()
+      .test(
+        'numbers',
+        'Identification must be numbers only',
+        (value) => !value || /^[0-9]+$/.test(value)
+      )
+      .test(
+        'lessThanTen',
+        'The identification number must be greater than 5',
+        (value) => !value || value.toString().length > 5
+      )
+      .required(),
     password: yup
       .string()
       .required('Please enter your password.')
@@ -109,6 +100,51 @@ const form = reactive(
     validationSchema,
   })
 )
+
+const handleSignup = async () => {
+  notyf.dismissAll()
+  isLoading.value = true
+
+  const {
+    meta: { valid },
+    values,
+  } = form
+
+  if (valid) {
+    await authService
+      .postRegister({ ...omit(values, ['passwordConfirmation']) })
+      .then(async (res) => {
+        step.value++
+        const { data } = res
+        const { token } = data
+        userSession.setToken(token)
+        userSession.setUser({ ...omit({ ...data }, ['token']) } as IUserData)
+        notyf.success(`Welcome ${data.name}`)
+        await sleep(1000)
+        router.push('/courses')
+      })
+      .catch((err) => {
+        notyf.error(`${err.message}`)
+      })
+      .finally(() => {
+        isLoading.value = false
+      })
+  }
+}
+
+const onAvatarChanged = (info: any) => {
+  // direct access to info object
+  const indexPrev = info.indexCached
+  const indexCurrent = info.index
+
+  // update style based on index
+  info.slideItems[indexPrev].classList.remove('active')
+  info.slideItems[indexCurrent].classList.add('active')
+
+  if (info.displayIndex) {
+    selectedAvatar.value = info.displayIndex - 1
+  }
+}
 
 onMounted(() => {
   if (sliderElement.value) {
@@ -150,7 +186,6 @@ onUnmounted(() => {
         </RouterLink>
       </div>
     </div>
-    {{ form.values }}
     <div id="vuero-signup" class="signup-wrapper">
       <div class="signup-steps" :class="[step === 0 && 'is-hidden']">
         <div class="steps-container">
@@ -219,6 +254,11 @@ onUnmounted(() => {
                                 :model-value="value"
                                 @update:model-value="handleChange"
                               />
+                              <ErrorMessage
+                                class="help has-text-danger"
+                                name="name"
+                                as="p"
+                              />
                               <VLabel raw class="auth-label">First Name</VLabel>
                             </VControl>
                           </VField>
@@ -236,6 +276,11 @@ onUnmounted(() => {
                                 :model-value="value"
                                 @update:model-value="handleChange"
                               />
+                              <ErrorMessage
+                                class="help has-text-danger"
+                                name="last_name"
+                                as="p"
+                              />
                               <VLabel raw class="auth-label">Last Name</VLabel>
                             </VControl>
                           </VField>
@@ -252,6 +297,11 @@ onUnmounted(() => {
                                 type="text"
                                 :model-value="value"
                                 @update:model-value="handleChange"
+                              />
+                              <ErrorMessage
+                                class="help has-text-danger"
+                                name="email"
+                                as="p"
                               />
                               <VLabel raw class="auth-label">Email Address</VLabel>
                             </VControl>
@@ -378,36 +428,70 @@ onUnmounted(() => {
                 <form class="signup-form" @submit.prevent="handleSignup">
                   <div class="columns is-multiline">
                     <div class="column is-12">
-                      <VField>
-                        <VControl>
-                          <VInput type="text" autocomplete="username" />
-                          <VLabel raw class="auth-label">Username</VLabel>
-                        </VControl>
-                      </VField>
+                      <AsyncField
+                        v-slot="{ handleChange, field: { value } }"
+                        :name="`identification`"
+                      >
+                        <VField>
+                          <VControl>
+                            <VInput
+                              type="text"
+                              :model-value="value"
+                              @update:model-value="handleChange"
+                            />
+                            <ErrorMessage
+                              class="help has-text-danger"
+                              name="identification"
+                              as="p"
+                            />
+                            <VLabel raw class="auth-label">Identification</VLabel>
+                          </VControl>
+                        </VField>
+                      </AsyncField>
                     </div>
                     <div class="column is-12">
-                      <VField>
-                        <VControl>
-                          <VInput type="password" autocomplete="new-password" />
-                          <VLabel raw class="auth-label">Password</VLabel>
-                        </VControl>
-                      </VField>
+                      <AsyncField
+                        v-slot="{ handleChange, field: { value } }"
+                        :name="`password`"
+                      >
+                        <VField>
+                          <VControl>
+                            <VInput
+                              type="password"
+                              :model-value="value"
+                              @update:model-value="handleChange"
+                            />
+                            <ErrorMessage
+                              class="help has-text-danger"
+                              name="password"
+                              as="p"
+                            />
+                            <VLabel raw class="auth-label">Password</VLabel>
+                          </VControl>
+                        </VField>
+                      </AsyncField>
                     </div>
                     <div class="column is-12">
-                      <VField>
-                        <VControl>
-                          <VInput type="password" autocomplete="new-password" />
-                          <VLabel raw class="auth-label">Confirm Password</VLabel>
-                        </VControl>
-                      </VField>
-                    </div>
-                    <div class="column is-12">
-                      <VField>
-                        <VControl class="has-switch">
-                          <VLabel>Send me marketing and transaction emails</VLabel>
-                          <VSwitchBlock color="success" checked />
-                        </VControl>
-                      </VField>
+                      <AsyncField
+                        v-slot="{ handleChange, field: { value } }"
+                        :name="`passwordConfirmation`"
+                      >
+                        <VField>
+                          <VControl>
+                            <VInput
+                              type="password"
+                              :model-value="value"
+                              @update:model-value="handleChange"
+                            />
+                            <ErrorMessage
+                              class="help has-text-danger"
+                              name="passwordConfirmation"
+                              as="p"
+                            />
+                            <VLabel raw class="auth-label">Confirm Password</VLabel>
+                          </VControl>
+                        </VField>
+                      </AsyncField>
                     </div>
                   </div>
 
@@ -416,6 +500,7 @@ onUnmounted(() => {
                       Previous
                     </VButton>
                     <VButton
+                      :disabled="!form.meta.valid"
                       size="big"
                       color="primary"
                       type="submit"

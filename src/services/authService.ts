@@ -16,7 +16,7 @@ const AuthServices = (api: AxiosInstance) => ({
     return response
   },
   postRegister: async (params: any) => {
-    const response = await api.post(`auth/signup`, params).then((res: AxiosResponse) => {
+    const response = await api.post(`oauth/signup`, params).then((res: AxiosResponse) => {
       return res
     })
     return response
