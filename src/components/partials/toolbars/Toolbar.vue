@@ -37,7 +37,7 @@ const {
     <div class="toolbar-link">
       <div
         class="icon-button"
-        v-tooltip.bottom.bubble="'Con 10 rachas se ganan 30 monedas!'"
+        v-tooltip.bottom.bubble="'With 10 streaks you earn 30 coins!'"
       >
         <i aria-hidden="true" class="iconify" data-icon="emojione:fire" />
         <span class="icon-button__badge">{{
@@ -48,7 +48,7 @@ const {
     <div class="toolbar-link">
       <div
         class="icon-button"
-        v-tooltip.bottom.bubble="'Con 200 monedas acceso a unidad del curso B1!'"
+        v-tooltip.bottom.bubble="'With 200 coins, access to the unit of the B1 course!'"
       >
         <i aria-hidden="true" class="iconify" data-icon="bxs:coin-stack" />
         <span class="icon-button__badge">{{

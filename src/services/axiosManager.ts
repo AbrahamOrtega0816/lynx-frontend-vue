@@ -3,6 +3,7 @@ import axios, {
   type RawAxiosRequestHeaders,
   type AxiosInstance,
   type AxiosResponse,
+  type AxiosRequestConfig,
 } from 'axios'
 import { useUserSession } from '../stores/userSession'
 
@@ -21,7 +22,7 @@ const ACCEPT = 'application/json'
 instance.defaults.headers.post['Content-Type'] = CONTENT_TYPE
 instance.defaults.headers.common['Accept'] = ACCEPT
 
-instance.interceptors.request.use((config : AxiosInstance) => {
+instance.interceptors.request.use((config: AxiosRequestConfig) => {
   const userSession = useUserSession()
 
   if (userSession.isLoggedIn) {
@@ -36,12 +37,14 @@ instance.interceptors.request.use((config : AxiosInstance) => {
 
 instance.interceptors.response.use(
   (response: AxiosResponse) => {
-    const { data, status }: { data: AxiosResponse,status:string } = response
+    const { data, status }: { data: AxiosResponse; status: string } = response
     return { ...data, status }
   },
-  async (error : AxiosResponse) => {
+  async (error: AxiosResponse) => {
+    const userSession = useUserSession()
     if (error.response.status === 401) {
-      console.log('logout')
+      // delete stored token if it fails
+      userSession.logoutUser()
     }
     return Promise.reject(error.response.data || error)
   }

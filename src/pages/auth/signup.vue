@@ -7,6 +7,8 @@ import { onceImageErrored } from '/@src/utils/via-placeholder'
 import sleep from '/@src/utils/sleep'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { useDarkmode } from '/@src/stores/darkmode'
+import { Field, useForm } from 'vee-validate'
+import * as yup from 'yup'
 
 let slider: TinySliderInstance
 const sliderElement = ref<HTMLElement>()
@@ -18,6 +20,7 @@ const selectedAvatar = ref(2)
 const isLoading = ref(false)
 const resizeValue = ref(70)
 const uploadModalOpen = ref(false)
+
 const avatars = [
   '/images/avatars/svg/vuero-1.svg',
   '/images/avatars/svg/vuero-2.svg',
@@ -64,6 +67,49 @@ useHead({
   title: "Auth Signup - Let'z",
 })
 
+const AsyncField = defineAsyncComponent({
+  loader: async () => Field,
+})
+
+const validationSchema = markRaw(
+  yup.object({
+    name: yup.string().required(),
+    email: yup
+      .string()
+      .email()
+      .test('Validate Email', 'Validate Email Formt', (value) => {
+        const re =
+          /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+        return re.test(String(value).toLowerCase())
+      })
+      .required(),
+    last_name: yup.string().required(),
+    identification: yup.number().min(5).required(),
+    password: yup
+      .string()
+      .required('Please enter your password.')
+      .min(8, 'Your password is too short.'),
+    passwordConfirmation: yup
+      .string()
+      .required('Please retype your password.')
+      .oneOf([yup.ref('password')], 'Your passwords do not match.'),
+  })
+)
+
+const form = reactive(
+  useForm({
+    initialValues: {
+      name: '',
+      password: '',
+      passwordConfirmation: '',
+      email: '',
+      last_name: '',
+      identification: '',
+    },
+    validationSchema,
+  })
+)
+
 onMounted(() => {
   if (sliderElement.value) {
     import('tiny-slider/src/tiny-slider').then(({ tns }) => {
@@ -99,12 +145,12 @@ onUnmounted(() => {
   <div>
     <div class="signup-nav">
       <div class="signup-nav-inner">
-        <RouterLink to="/" class="logo">
+        <RouterLink to="/courses" class="logo">
           <AnimatedLogo width="36px" height="36px" />
         </RouterLink>
       </div>
     </div>
-
+    {{ form.values }}
     <div id="vuero-signup" class="signup-wrapper">
       <div class="signup-steps" :class="[step === 0 && 'is-hidden']">
         <div class="steps-container">
@@ -153,7 +199,7 @@ onUnmounted(() => {
             <div class="columns signup-columns" :class="[step !== 0 && 'is-hidden']">
               <div class="column is-4 is-offset-1">
                 <h1 id="main-signup-title" class="title is-3 signup-title">
-                  Become a Let'z
+                  Become a Let'z Student
                 </h1>
                 <h2 id="main-signup-subtitle" class="subtitle signup-subtitle">
                   And simply join an unmatched design experience.
@@ -162,28 +208,55 @@ onUnmounted(() => {
                   <form class="signup-form is-mobile-spaced" @submit.prevent>
                     <div class="columns is-multiline">
                       <div class="column is-6">
-                        <VField>
-                          <VControl>
-                            <VInput type="text" autocomplete="given-name" />
-                            <VLabel raw class="auth-label">First Name</VLabel>
-                          </VControl>
-                        </VField>
+                        <AsyncField
+                          v-slot="{ handleChange, field: { value } }"
+                          :name="`name`"
+                        >
+                          <VField>
+                            <VControl>
+                              <VInput
+                                type="text"
+                                :model-value="value"
+                                @update:model-value="handleChange"
+                              />
+                              <VLabel raw class="auth-label">First Name</VLabel>
+                            </VControl>
+                          </VField>
+                        </AsyncField>
                       </div>
                       <div class="column is-6">
-                        <VField>
-                          <VControl>
-                            <VInput type="text" autocomplete="family-name" />
-                            <VLabel raw class="auth-label">Last Name</VLabel>
-                          </VControl>
-                        </VField>
+                        <AsyncField
+                          v-slot="{ handleChange, field: { value } }"
+                          :name="`last_name`"
+                        >
+                          <VField>
+                            <VControl>
+                              <VInput
+                                type="text"
+                                :model-value="value"
+                                @update:model-value="handleChange"
+                              />
+                              <VLabel raw class="auth-label">Last Name</VLabel>
+                            </VControl>
+                          </VField>
+                        </AsyncField>
                       </div>
                       <div class="column is-12">
-                        <VField>
-                          <VControl>
-                            <VInput type="text" autocomplete="email" />
-                            <VLabel raw class="auth-label">Email Address</VLabel>
-                          </VControl>
-                        </VField>
+                        <AsyncField
+                          v-slot="{ handleChange, field: { value } }"
+                          :name="`email`"
+                        >
+                          <VField>
+                            <VControl>
+                              <VInput
+                                type="text"
+                                :model-value="value"
+                                @update:model-value="handleChange"
+                              />
+                              <VLabel raw class="auth-label">Email Address</VLabel>
+                            </VControl>
+                          </VField>
+                        </AsyncField>
                       </div>
                       <div class="column is-12">
                         <div class="signup-type">
@@ -284,6 +357,9 @@ onUnmounted(() => {
                   </div>
                 </div>
                 <div class="button-wrap is-centered has-text-centered">
+                  <VButton color="primary" size="big" rounded lower @click="step--">
+                    Previous
+                  </VButton>
                   <VButton color="primary" size="big" rounded lower @click="step++">
                     Continue
                   </VButton>
@@ -336,6 +412,9 @@ onUnmounted(() => {
                   </div>
 
                   <div class="button-wrap is-centered has-text-centered">
+                    <VButton color="primary" size="big" rounded lower @click="step--">
+                      Previous
+                    </VButton>
                     <VButton
                       size="big"
                       color="primary"
@@ -830,6 +909,9 @@ onUnmounted(() => {
       &.is-centered {
         margin-top: 40px;
         text-align: center;
+        display: flex;
+        justify-content: center;
+        gap: 15px;
 
         .button {
           min-width: 180px;
@@ -842,17 +924,18 @@ onUnmounted(() => {
         width: 190px;
         margin-left: 6px;
 
-        &:first-child {
+        &:first-child,
+        &:nth-child(2) {
           &:hover {
             opacity: 0.95;
             box-shadow: var(--primary-box-shadow);
           }
         }
 
-        &:nth-child(2) {
-          color: var(--dark-text);
-          border-color: var(--placeholder);
-        }
+        // &:nth-child(2) {
+        //   color: var(--dark-text);
+        //   border-color: var(--placeholder);
+        // }
       }
     }
 
