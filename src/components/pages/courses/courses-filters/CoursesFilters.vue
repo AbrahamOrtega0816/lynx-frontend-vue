@@ -85,7 +85,7 @@ const { data: specialities = [], isLoading: isLoadingSpecialities } = useQuery({
       <AsyncField v-slot="{ handleChange }" :name="`search`">
         <VControl icon="feather:search">
           <input
-            class="input custom-text-filter"
+            class="input custom-text-filter is-rounded"
             placeholder="Search..."
             @input="handleChange"
           />
@@ -94,7 +94,7 @@ const { data: specialities = [], isLoading: isLoadingSpecialities } = useQuery({
     </div>
     <div class="column">
       <AsyncField v-slot="{ handleChange }" :name="`status`">
-        <VField>
+        <VField class="is-rounded-select">
           <VControl>
             <Multiselect
               placeholder="Filter by Status"
@@ -115,7 +115,7 @@ const { data: specialities = [], isLoading: isLoadingSpecialities } = useQuery({
     </div>
     <div class="column">
       <AsyncField v-slot="{ handleChange }" :name="`categories`">
-        <VField>
+        <VField class="is-rounded-select">
           <VControl class="control-multiselect">
             <Multiselect
               placeholder="Filter by Categories"
@@ -137,7 +137,7 @@ const { data: specialities = [], isLoading: isLoadingSpecialities } = useQuery({
     </div>
     <div class="column">
       <AsyncField v-slot="{ handleChange }" :name="`specialities`">
-        <VField>
+        <VField class="is-rounded-select">
           <VControl class="control-multiselect">
             <Multiselect
               placeholder="Filter by Specialities"
