@@ -6,6 +6,7 @@ import { useQuery } from 'vue-query'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { lessonsService } from '/@src/services'
 import sleep from '/@src/utils/sleep'
+import { array } from 'yup'
 
 interface lesson {
   id: number
@@ -32,7 +33,7 @@ const props = withDefaults(
 
 const notyf = useNotyf()
 
-const onIndexChanged = (info: any) => {
+const onIndexChanged = async (info: any) => {
   // direct access to info object
   const indexPrev = info.indexCached
   const indexCurrent = info.index
@@ -46,6 +47,11 @@ const onIndexChanged = (info: any) => {
 
   // update style based on index
   info.slideItems[indexPrev].classList.remove('active')
+
+  const arr = [...new Array(info.slideItems.length).keys()]
+  await arr.forEach(async (_, index: number) => {
+    info.slideItems[index].classList.remove('active')
+  })
   info.slideItems[indexCurrent].classList.add('active')
 }
 
@@ -271,7 +277,7 @@ const isFinish = ref(false)
               }
 
               span {
-                color: var(--smoke-primary) !important;
+                color: var(--white);
               }
             }
 
@@ -311,8 +317,8 @@ const isFinish = ref(false)
               border-color: var(--primary);
             }
 
-            > span {
-              color: var(--smoke-white);
+            span {
+              color: var(--white);
             }
           }
         }

@@ -2,16 +2,11 @@
   <div class="mobile-subsidebar">
     <div class="inner">
       <div class="sidebar-title">
-        <h3>Dashboards</h3>
+        <h3>Courses</h3>
       </div>
 
       <ul class="submenu" data-simplebar>
-        <VCollapseLinks>
-          <template #header>
-            Personal
-            <i aria-hidden="true" class="iconify" data-icon="feather:chevron-right" />
-          </template>
-
+        <li>
           <RouterLink to="/courses">
             <i
               aria-hidden="true"
@@ -20,7 +15,7 @@
             />
             Courses
           </RouterLink>
-        </VCollapseLinks>
+        </li>
       </ul>
     </div>
   </div>
