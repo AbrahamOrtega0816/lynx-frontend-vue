@@ -122,7 +122,9 @@ const isFinish = ref(false)
         <div class="lessons">
           <div class="lessons-toolbar">
             <div class="left">
-              <h3>Lessons</h3>
+              <h3>
+                Lessons <span class="has-text-primary">({{ lessonsGroup?.length }})</span>
+              </h3>
             </div>
           </div>
           <div
