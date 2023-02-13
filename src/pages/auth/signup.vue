@@ -1,9 +1,7 @@
 <script setup lang="ts">
 import type { TinySliderInstance } from 'tiny-slider/src/tiny-slider'
 import { useHead } from '@vueuse/head'
-
 import { onceImageErrored } from '/@src/utils/via-placeholder'
-
 import sleep from '/@src/utils/sleep'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { useDarkmode } from '/@src/stores/darkmode'
@@ -22,8 +20,6 @@ const darkmode = useDarkmode()
 const step = ref(0)
 const selectedAvatar = ref(2)
 const isLoading = ref(false)
-const resizeValue = ref(70)
-const uploadModalOpen = ref(false)
 
 const avatars = [
   '/images/avatars/svg/vuero-1.svg',
@@ -41,6 +37,9 @@ const avatars = [
 ]
 
 const userSession = useUserSession()
+
+const newAvatar = ref<string | number>('')
+const isUploading = ref(false)
 
 useHead({
   title: "Auth Signup - Let'z",
@@ -84,6 +83,7 @@ const validationSchema = markRaw(
       .string()
       .required('Please retype your password.')
       .oneOf([yup.ref('password')], 'Your passwords do not match.'),
+    image: yup.string(),
   })
 )
 
@@ -96,6 +96,7 @@ const form = reactive(
       email: '',
       last_name: '',
       identification: '',
+      image: '',
     },
     validationSchema,
   })
@@ -104,6 +105,11 @@ const form = reactive(
 const handleSignup = async () => {
   notyf.dismissAll()
   isLoading.value = true
+
+  form.setFieldValue(
+    'image',
+    typeof newAvatar.value === 'number' ? avatars[newAvatar.value] : newAvatar.value
+  )
 
   const {
     meta: { valid },
@@ -143,7 +149,44 @@ const onAvatarChanged = (info: any) => {
 
   if (info.displayIndex) {
     selectedAvatar.value = info.displayIndex - 1
+    newAvatar.value = info.displayIndex - 1
+    isUploading.value = false
   }
+}
+
+const convertBase64 = (file: File) => {
+  return new Promise((resolve, reject) => {
+    const fileReader = new FileReader()
+    fileReader.readAsDataURL(file)
+
+    fileReader.onload = () => {
+      resolve(fileReader.result)
+    }
+
+    fileReader.onerror = (error) => {
+      reject(error)
+    }
+  })
+}
+
+const onAddFile = async (error: any, file: any) => {
+  if (error) {
+    console.error(error)
+    return
+  } else {
+    const base64 = await convertBase64(file.file)
+    newAvatar.value = base64 as string
+  }
+}
+
+const onRemoveFile = (error: any, file: any) => {
+  if (error) {
+    console.error(error)
+    return
+  } else {
+    isUploading.value = false
+  }
+  console.log('file removed', file)
 }
 
 onMounted(() => {
@@ -375,20 +418,58 @@ onUnmounted(() => {
                   </h2>
                   <div class="picture-selector">
                     <div class="image-container">
-                      <img :src="avatars[selectedAvatar]" alt="" />
-                      <div
-                        class="upload-button"
-                        role="button"
-                        tabindex="0"
-                        @keydown.space.prevent="uploadModalOpen = true"
-                        @click="uploadModalOpen = true"
-                      >
-                        <i
-                          aria-hidden="true"
-                          class="iconify"
-                          data-icon="feather:plus"
-                        ></i>
-                      </div>
+                      <VAvatar size="xl" class="profile-v-avatar">
+                        <template #avatar>
+                          <img
+                            v-if="!isUploading"
+                            class="avatar"
+                            :src="avatars[selectedAvatar]"
+                            alt=""
+                            @error.once="onceImageErrored(150)"
+                          />
+                          <VFilePond
+                            v-else
+                            class="profile-filepond"
+                            name="profile_filepond"
+                            :chunk-retry-delays="[500, 1000, 3000]"
+                            label-idle="<i class='lnil lnil-cloud-upload'></i>"
+                            :accepted-file-types="[
+                              'image/png',
+                              'image/jpeg',
+                              'image/gif',
+                            ]"
+                            :image-preview-height="140"
+                            :image-resize-target-width="140"
+                            :image-resize-target-height="140"
+                            image-crop-aspect-ratio="1:1"
+                            style-panel-layout="compact circle"
+                            style-load-indicator-position="center bottom"
+                            style-progress-indicator-position="right bottom"
+                            style-button-remove-item-position="left bottom"
+                            style-button-process-item-position="right bottom"
+                            @addfile="onAddFile"
+                            @removefile="onRemoveFile"
+                          />
+                          <VIconButton
+                            v-if="!isUploading"
+                            icon="feather:edit-2"
+                            class="edit-button is-edit"
+                            circle
+                            tabindex="0"
+                            @keydown.space.prevent="isUploading = true"
+                            @click="isUploading = true"
+                          />
+                          <VIconButton
+                            v-else
+                            icon="feather:arrow-left"
+                            class="edit-button is-back"
+                            circle
+                            tabindex="0"
+                            @keydown.space.prevent="isUploading = false"
+                            @click="isUploading = false"
+                          />
+                        </template>
+                      </VAvatar>
                     </div>
                   </div>
                 </div>
@@ -541,52 +622,6 @@ onUnmounted(() => {
         </div>
       </div>
     </div>
-
-    <!-- upload modal -->
-    <VModal
-      :open="uploadModalOpen"
-      title="Upload and crop your picture"
-      actions="center"
-      size="small"
-      @close="uploadModalOpen = false"
-    >
-      <template #content>
-        <div class="has-text-centered">
-          <div class="upload-demo-wrap"><VAvatar size="big" /></div>
-
-          <small class="help-text">Use the slider to resize the image</small>
-
-          <VField class="resize-handler">
-            <VControl>
-              <Slider v-model="resizeValue" :tooltips="false" />
-            </VControl>
-          </VField>
-        </div>
-      </template>
-      <template #cancel><wbr /></template>
-      <template #action>
-        <VField grouped>
-          <VControl>
-            <div class="file">
-              <label class="file-label">
-                <input class="file-input" type="file" name="resume" />
-                <span class="file-cta">
-                  <span class="file-icon">
-                    <i aria-hidden="true" class="fas fa-cloud-upload-alt"></i>
-                  </span>
-                  <span class="file-label"> Choose a file… </span>
-                </span>
-              </label>
-            </div>
-          </VControl>
-          <VControl>
-            <VButton class="upload-result" size="big" outlined disabled>
-              Confirm
-            </VButton>
-          </VControl>
-        </VField>
-      </template>
-    </VModal>
   </div>
 </template>
 
@@ -1134,40 +1169,15 @@ onUnmounted(() => {
       margin: 10px auto;
       border-radius: var(--radius-rounded);
 
-      img {
-        width: 140px;
-        height: 140px;
-        border-radius: var(--radius-rounded);
+      .v-avatar {
+        position: relative;
         display: block;
-        border: 4px solid #e8e8e8;
-        margin-left: -1px;
-      }
+        margin: 0 auto;
 
-      .upload-button {
-        position: absolute;
-        bottom: 18px;
-        right: 0;
-        width: 36px;
-        height: 36px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background: var(--white);
-        border-radius: var(--radius-rounded);
-        border: 1px solid var(--fade-grey-dark-4);
-        z-index: 5;
-        transition: all 0.3s; // transition-all test
-        cursor: pointer;
-
-        &:hover,
-        &:focus {
-          box-shadow: var(--light-box-shadow);
-        }
-
-        svg {
-          height: 16px;
-          width: 16px;
-          color: var(--dark-text);
+        .edit-button {
+          position: absolute;
+          bottom: 0;
+          right: 0;
         }
       }
     }
@@ -1398,26 +1408,6 @@ onUnmounted(() => {
             a {
               color: var(--primary);
             }
-          }
-        }
-      }
-    }
-  }
-
-  .signup-profile-wrapper {
-    .picture-selector {
-      .image-container {
-        img {
-          border-color: var(--dark-sidebar-light-10);
-        }
-
-        .upload-button {
-          background-color: var(--dark-sidebar-light-2);
-          border-color: var(--dark-sidebar-light-10);
-
-          svg {
-            color: var(--light-text);
-            stroke: var(--light-text);
           }
         }
       }
