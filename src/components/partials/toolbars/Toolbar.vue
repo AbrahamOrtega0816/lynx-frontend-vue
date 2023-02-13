@@ -50,7 +50,7 @@ const {
         class="icon-button"
         v-tooltip.bottom.bubble="'With 200 coins, access to the unit of the B1 course!'"
       >
-        <i aria-hidden="true" class="iconify" data-icon="bxs:coin-stack" />
+        <i aria-hidden="true" class="iconify" data-icon="twemoji:coin" />
         <span class="icon-button__badge">{{
           `${score?.toString?.length > 2 ? `${String(score).slice(0, 2)}+` : `${score}`}`
         }}</span>

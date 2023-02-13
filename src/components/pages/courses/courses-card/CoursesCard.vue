@@ -1,8 +1,10 @@
 <!-- eslint-disable prettier-vue/prettier -->
 <script setup lang="ts">
-import { useField } from 'vee-validate'
+import { Field, Form, useField } from 'vee-validate'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { onceImageErrored } from '/@src/utils/via-placeholder'
+import { courseService } from '/@src/services'
+import { useUserSession } from '/@src/stores/userSession'
 
 defineProps<{
   courses?: Array<any>
@@ -12,6 +14,10 @@ defineProps<{
 const notyf = useNotyf()
 
 const router = useRouter()
+
+const {
+  user: { user_id },
+} = useUserSession()
 
 const rediretToCoursesDetail = (id: number, active: boolean) => {
   if (active) {
@@ -23,8 +29,27 @@ const rediretToCoursesDetail = (id: number, active: boolean) => {
   }
 }
 
-const onChangeIsFavorite = (checked: boolean) => {
-  console.log(checked)
+const onChageFavoriteCourse = async (e: Event, course_id: number, name: string) => {
+  const params = {
+    is_favorite: e?.currentTarget?.checked,
+    course_id,
+  }
+  await courseService
+    .putSetIsCourseFavorite(user_id as number, params)
+    .then((res) => {
+      if (res.status === 200) {
+        notyf.success(
+          `Your course ${name} has been ${
+            params.is_favorite ? 'added' : 'deleted'
+          } to your favorites`
+        )
+      } else {
+        notyf.info(`${res.message}`)
+      }
+    })
+    .catch((err) => {
+      notyf.error(`${err.message}`)
+    })
 }
 </script>
 
@@ -129,8 +154,8 @@ const onChangeIsFavorite = (checked: boolean) => {
                 {{ course.specialities.name }} - {{ course?.lessons }} Lessons
               </h2>
               <VSwitchHeart
-                @update:model-value="onChangeIsFavorite"
-                :cheked="course.is_favorite"
+                v-model="course.is_favorite"
+                @change.stop="(e:Event) => onChageFavoriteCourse(e, course.id, course.name)"
               />
             </div>
             <h3 class="dark-inverted is-capitalized">

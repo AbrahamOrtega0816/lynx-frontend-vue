@@ -14,7 +14,7 @@ async function initNotyfService() {
   if (!import.meta.env.SSR) {
     const { Notyf } = await import('notyf')
     notyf = new Notyf({
-      duration: 5000,
+      duration: 7000,
       position: {
         x: 'right',
         y: 'bottom',

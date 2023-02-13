@@ -30,7 +30,6 @@ watch(
       :checked="props.modelValue"
       v-bind="$attrs"
       type="checkbox"
-      class="is-switch"
       @change="emit('update:modelValue', !props.modelValue)"
     />
     <svg viewBox="0 0 33 23">

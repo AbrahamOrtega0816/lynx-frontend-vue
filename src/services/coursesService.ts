@@ -14,7 +14,6 @@ const CourseService = (api: AxiosInstance) => ({
     })
     return response
   },
-  // Courses List filters
   getCoursesStatus: async () => {
     const response = await api.get(`courses/status`).then((res) => {
       return res
@@ -29,6 +28,12 @@ const CourseService = (api: AxiosInstance) => ({
   },
   getCoursesSpecialities: async () => {
     const response = await api.get(`courses/specialities`).then((res) => {
+      return res
+    })
+    return response
+  },
+  putSetIsCourseFavorite: async (id: number, params: any) => {
+    const response = await api.put(`courses/${id}`, params).then((res) => {
       return res
     })
     return response
