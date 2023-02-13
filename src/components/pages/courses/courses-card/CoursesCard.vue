@@ -1,5 +1,6 @@
 <!-- eslint-disable prettier-vue/prettier -->
 <script setup lang="ts">
+import { useField } from 'vee-validate'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { onceImageErrored } from '/@src/utils/via-placeholder'
 
@@ -20,6 +21,10 @@ const rediretToCoursesDetail = (id: number, active: boolean) => {
       `We are sorry at this moment we do not have this course available, we will work to make it available soon`
     )
   }
+}
+
+const onChangeIsFavorite = (checked: boolean) => {
+  console.log(checked)
 }
 </script>
 
@@ -109,25 +114,23 @@ const rediretToCoursesDetail = (id: number, active: boolean) => {
         :key="course.id"
         class="column is-6-tablet is-4-desktop is-3-fullhd"
       >
-        <div
-          :class="`card-grid-item is-clickable ${!course.is_active && 'disabled'}`"
-          @click="rediretToCoursesDetail(course.id, course.is_active)"
-          @keydown="rediretToCoursesDetail(course.id, course.is_active)"
-        >
+        <div :class="`card-grid-item  ${!course.is_active && 'disabled'}`">
           <img
             :src="course.image"
             :alt="course.name"
+            class="is-clickable"
             @error.once="onceImageErrored(400, 300)"
+            @click="rediretToCoursesDetail(course.id, course.is_active)"
+            @keydown="rediretToCoursesDetail(course.id, course.is_active)"
           />
           <div class="card-grid-item-content mb-2">
             <div class="mb-2 is-flex is-justify-content-space-between">
               <h2 class="has-text-primary is-capitalized">
                 {{ course.specialities.name }} - {{ course?.lessons }} Lessons
               </h2>
-              <VIconWrap
-                icon="mdi:heart-multiple"
-                :color="course.is_favorite ? 'danger' : 'primary'"
-                class="favorite"
+              <VSwitchHeart
+                @update:model-value="onChangeIsFavorite"
+                :cheked="course.is_favorite"
               />
             </div>
             <h3 class="dark-inverted is-capitalized">

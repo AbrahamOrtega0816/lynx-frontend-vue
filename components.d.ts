@@ -123,6 +123,7 @@ declare module '@vue/runtime-core' {
     VSimpleDatatables: typeof import('./src/components/base/plugins/VSimpleDatatables.vue')['default']
     VSnack: typeof import('./src/components/base/snack/V-Snack.vue')['default']
     VSwitchBlock: typeof import('./src/components/base/form/VSwitchBlock.vue')['default']
+    VSwitchHeart: typeof import('./src/components/base/form/VSwitchHeart.vue')['default']
     VSwitchSegment: typeof import('./src/components/base/form/VSwitchSegment.vue')['default']
     VTabs: typeof import('./src/components/base/tabs/VTabs.vue')['default']
     VTag: typeof import('./src/components/base/tags/VTag.vue')['default']
