@@ -54,7 +54,7 @@ watch(
 <!-- eslint-disable prettier-vue/prettier -->
 <template>
   <div
-    v-if="activities?.length > 0 && !isLoading"
+    v-if="activities?.length > 0 && lessonId && !isLoading"
     class="lifestyle-dashboard lifestyle-dashboard-v2"
   >
     <div class="dashboard-title is-main">
@@ -122,7 +122,7 @@ watch(
   <!--List Empty Search Placeholder -->
   <VPlaceholderPage
     v-if="!isLoading"
-    :class="[activities?.length && 'is-hidden']"
+    :class="{ 'is-hidden': activities?.length && lessonId }"
     title="Select a lesson to be able to visualize its activities"
   >
     <template #image>
