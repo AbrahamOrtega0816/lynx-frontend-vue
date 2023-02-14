@@ -19,6 +19,7 @@ declare module '@vue/runtime-core' {
     CoursesLessonsGroup: typeof import('./src/components/pages/courses-detail/corses-lessons-group/CoursesLessonsGroup.vue')['default']
     CoursesList: typeof import('./src/components/pages/courses/courses-list/CoursesList.vue')['default']
     CoursesMobileSubsidebar: typeof import('./src/layouts/mobile-subsidebars/CoursesMobileSubsidebar.vue')['default']
+    CoursesSectionsMain: typeof import('./src/components/pages/courses-sections/CoursesSectionsMain.vue')['default']
     CoursesSubsidebar: typeof import('./src/layouts/sidebar-subsidebar/CoursesSubsidebar.vue')['default']
     EditProfileExperience: typeof import('./src/components/pages/forms/edit-profile/EditProfileExperience.vue')['default']
     EditProfileGeneral: typeof import('./src/components/pages/forms/edit-profile/EditProfileGeneral.vue')['default']

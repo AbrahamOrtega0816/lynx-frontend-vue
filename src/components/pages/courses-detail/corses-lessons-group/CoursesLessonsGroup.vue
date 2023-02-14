@@ -6,7 +6,6 @@ import { useQuery } from 'vue-query'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { lessonsService } from '/@src/services'
 import sleep from '/@src/utils/sleep'
-import { array } from 'yup'
 
 interface lesson {
   id: number

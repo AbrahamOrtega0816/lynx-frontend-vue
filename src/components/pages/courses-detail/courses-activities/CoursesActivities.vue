@@ -5,6 +5,7 @@ import { useNotyf } from '/@src/composable/useNotyf'
 import { lessonsService } from '/@src/services'
 
 const notyf = useNotyf()
+const router = useRouter()
 
 const props = withDefaults(
   defineProps<{
@@ -99,6 +100,7 @@ watch(
                     </template>
                     <template #action>
                       <VIconButton
+                        @click="() => router.push(`/courses/sections/${activitie.id}`)"
                         :disabled="!activitie?.is_active"
                         :icon="
                           activitie?.is_active

@@ -38,6 +38,12 @@ const CourseService = (api: AxiosInstance) => ({
     })
     return response
   },
+  getSectionsOfLesson: async (id: number) => {
+    const response = await api.get(`sections/${id}`).then((res) => {
+      return res
+    })
+    return response
+  },
 })
 
 export default CourseService
