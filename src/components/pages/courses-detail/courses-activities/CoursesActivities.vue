@@ -66,7 +66,7 @@ watch(
       </div>
       <div class="right">
         <VControl icon="feather:search">
-          <input class="input custom-text-filter" placeholder="Search..." />
+          <input class="input custom-text-filter is-rounded" placeholder="Search..." />
         </VControl>
       </div>
     </div>
@@ -83,14 +83,13 @@ watch(
                   :key="index"
                   class="column is-6-tablet is-4-desktop is-3-fullhd"
                 >
-                  <VBlock :title="activitie?.title" center>
+                  <VBlock
+                    class="is-capitalize block-activies"
+                    :title="activitie?.title"
+                    center
+                  >
                     <template #icon>
-                      <VIconBox
-                        class="is-capitalize"
-                        size="small"
-                        color="primary"
-                        bordered
-                      >
+                      <VIconBox size="small" color="primary" bordered>
                         <i
                           aria-hidden="true"
                           class="iconify"
@@ -198,6 +197,21 @@ watch(
 
           span {
             font-variant: small-caps;
+          }
+        }
+      }
+
+      .block-activies {
+        .flex-stat-circle {
+          display: none;
+          transition: 0.1s;
+        }
+      }
+
+      &:hover {
+        .block-activies {
+          .flex-stat-circle {
+            display: block;
           }
         }
       }

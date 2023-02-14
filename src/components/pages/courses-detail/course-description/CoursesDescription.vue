@@ -3,7 +3,10 @@ import { useQuery } from 'vue-query'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { courseService } from '/@src/services'
 import { useUserSession } from '/@src/stores/userSession'
+import { useFlexRadialChartCircle } from '/@src/models/flexRadialChartCircleChart'
+import ApexChart from 'vue3-apexcharts'
 
+const { flexRadialChartCircleOptions } = useFlexRadialChartCircle()
 const notyf = useNotyf()
 
 const {
@@ -57,20 +60,36 @@ const { data: courseDetail, isLoading } = useQuery({
           <!--List Loading Placeholder -->
           <div class="header-meta">
             <div :class="[!isLoading && 'is-hidden']">
-              <div class="colums is-multiline">
-                <div class="colum mt-3">
+              <div class="columns is-multiline">
+                <div class="column mt-3">
                   <VPlaceloadText width="350px" />
                 </div>
-                <div class="colum mt-6">
+                <div class="column mt-6">
                   <VPlaceloadText width="350px" />
                 </div>
-                <div class="colum mt-2">
+                <div class="column mt-2">
                   <VPlaceloadText :lines="1" width="350px" />
                 </div>
               </div>
             </div>
             <div v-if="!isLoading">
-              <h3>Hello, {{ name }}</h3>
+              <div class="columns is-flex is-align-items-center">
+                <div class="column">
+                  <h3>Hello, {{ name }}</h3>
+                </div>
+                <div class="column progress-circle">
+                  <ApexChart
+                    id="flex-stat-circle"
+                    class="flex-stat-circle"
+                    :height="flexRadialChartCircleOptions.chart.height"
+                    :type="flexRadialChartCircleOptions.chart.type"
+                    :series="[25]"
+                    :options="flexRadialChartCircleOptions"
+                  >
+                  </ApexChart>
+                </div>
+              </div>
+
               <h3 class="pt-3 is-capitalize">{{ courseDetail?.name }}</h3>
               <p class="pt-3">
                 {{ courseDetail?.description }}
@@ -127,6 +146,10 @@ const { data: courseDetail, isLoading } = useQuery({
         color: var(--smoke-white-dark-2);
         margin-bottom: 16px;
         max-width: 620px;
+      }
+
+      .progress-circle {
+        max-width: 95px;
       }
 
       .action-link {
