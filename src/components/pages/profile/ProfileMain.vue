@@ -10,7 +10,7 @@ import { IUser, IUserData } from '/@src/models/user'
 const notyf = useNotyf()
 
 const {
-  user: { user_id },
+  user: { user_id, role },
   setUser,
 } = useUserSession()
 
@@ -101,7 +101,7 @@ const indexView = ref(0)
           <div class="account-box is-navigation">
             <VBlock
               :title="`${profile?.name} ${profile?.last_name}`"
-              subtitle="Product Manager"
+              :subtitle="role"
               center
             >
               <template #icon>

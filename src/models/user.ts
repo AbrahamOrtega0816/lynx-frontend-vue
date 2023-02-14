@@ -20,4 +20,5 @@ export type IUserData = {
   racha: string
   score: number
   image: string
+  role: string
 }

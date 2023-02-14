@@ -36,7 +36,7 @@ const redirect = (route: string) => router.push(route)
         <VAvatar size="large" :picture="user.image" />
         <div class="meta">
           <span class="is-capitalize">{{ user.name }}</span>
-          <span>Product Manager</span>
+          <span>{{ user.role }}</span>
         </div>
       </div>
 

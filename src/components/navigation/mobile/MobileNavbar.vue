@@ -8,10 +8,7 @@ const props = defineProps<{
 </script>
 
 <template>
-  <nav
-    class="navbar mobile-navbar is-hidden-desktop is-hidden-tablet"
-    aria-label="main navigation"
-  >
+  <nav class="navbar mobile-navbar" aria-label="main navigation">
     <div class="container">
       <!-- Brand -->
       <div class="navbar-brand">

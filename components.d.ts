@@ -54,6 +54,7 @@ declare module '@vue/runtime-core' {
     Sidebar: typeof import('./src/components/navigation/desktop/Sidebar.vue')['default']
     StackPopoverContent: typeof import('./src/components/partials/popover/StackPopoverContent.vue')['default']
     Toolbar: typeof import('./src/components/partials/toolbars/Toolbar.vue')['default']
+    ToolbarNotification: typeof import('./src/components/partials/toolbars/ToolbarNotification.vue')['default']
     UIWidget: typeof import('./src/components/partials/widgets/ui-creative/UIWidget.vue')['default']
     UserProfileDropdown: typeof import('./src/components/partials/dropdowns/UserProfileDropdown.vue')['default']
     VAccordion: typeof import('./src/components/base/accordion/VAccordion.vue')['default']

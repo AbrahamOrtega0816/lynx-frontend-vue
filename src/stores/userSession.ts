@@ -9,6 +9,7 @@ const userValues = {
   racha: '',
   score: 0,
   image: '',
+  role: 'Student',
 }
 
 export const useUserSession = defineStore('userSession', () => {

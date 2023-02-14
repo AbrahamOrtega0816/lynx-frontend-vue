@@ -50,105 +50,10 @@ const { data: sections, isLoading } = useQuery({
 
     <div class="profile-body mt-5">
       <div v-if="sections?.length > 0" class="settings-section">
-        <a class="settings-box">
-          <div class="edit-icon">
-            <i aria-hidden="true" class="lnil lnil-pencil"></i>
-          </div>
-
+        <a class="settings-box" v-for="(section, index) in sections" :key="index">
           <VIconWrap dark="6" icon="lnil lnil-apartment" />
-
-          <span>Company</span>
-          <h3>Manage Company</h3>
-        </a>
-        <a class="settings-box">
-          <div class="edit-icon">
-            <i aria-hidden="true" class="lnil lnil-pencil"></i>
-          </div>
-
-          <VIconWrap dark="6" icon="lnil lnil-users" />
-
-          <span>Team</span>
-          <h3>Manage Team</h3>
-        </a>
-        <a class="settings-box">
-          <div class="edit-icon">
-            <i aria-hidden="true" class="lnil lnil-pencil"></i>
-          </div>
-
-          <VIconWrap dark="6" icon="lnil lnil-briefcase-alt" />
-
-          <span>Projects</span>
-          <h3>Project Settings</h3>
-        </a>
-        <a class="settings-box">
-          <div class="edit-icon">
-            <i aria-hidden="true" class="lnil lnil-pencil"></i>
-          </div>
-
-          <VIconWrap dark="6" icon="lnil lnil-lock-alt-1" />
-
-          <span>Permissions</span>
-          <h3>Manage Permissions</h3>
-        </a>
-        <a class="settings-box">
-          <div class="edit-icon">
-            <i aria-hidden="true" class="lnil lnil-pencil"></i>
-          </div>
-
-          <VIconWrap dark="6" icon="lnil lnil-file-name" />
-
-          <span>Document</span>
-          <h3>Document Policies</h3>
-        </a>
-        <a class="settings-box">
-          <div class="edit-icon">
-            <i aria-hidden="true" class="lnil lnil-pencil"></i>
-          </div>
-
-          <VIconWrap dark="6" icon="lnil lnil-file-upload" />
-
-          <span>Upload</span>
-          <h3>Upload Policies</h3>
-        </a>
-        <a class="settings-box">
-          <div class="edit-icon">
-            <i aria-hidden="true" class="lnil lnil-pencil"></i>
-          </div>
-
-          <VIconWrap dark="6" icon="lnil lnil-credit-card" />
-
-          <span>Billing</span>
-          <h3>Billing and Plans</h3>
-        </a>
-        <a class="settings-box">
-          <div class="edit-icon">
-            <i aria-hidden="true" class="lnil lnil-pencil"></i>
-          </div>
-
-          <VIconWrap dark="6" icon="lnil lnil-bubble" />
-
-          <span>Messaging</span>
-          <h3>Messaging Settings</h3>
-        </a>
-        <a class="settings-box">
-          <div class="edit-icon">
-            <i aria-hidden="true" class="lnil lnil-pencil"></i>
-          </div>
-
-          <VIconWrap dark="6" icon="lnil lnil-shield" />
-
-          <span>Security</span>
-          <h3>Security Settings</h3>
-        </a>
-        <a class="settings-box">
-          <div class="edit-icon">
-            <i aria-hidden="true" class="lnil lnil-pencil"></i>
-          </div>
-
-          <VIconWrap dark="6" icon="lnil lnil-cogs" />
-
-          <span>Preferences</span>
-          <h3>General Settings</h3>
+          <span>{{ section.title }}</span>
+          <!-- <h3>Manage Company</h3> -->
         </a>
       </div>
       <div :class="[!isLoading && 'is-hidden']">
@@ -190,11 +95,6 @@ const { data: sections, isLoading } = useQuery({
           border-color: var(--primary);
           box-shadow: var(--light-box-shadow);
 
-          .edit-icon {
-            opacity: 1;
-            pointer-events: all;
-          }
-
           .icon-wrap {
             i {
               color: var(--primary);
@@ -215,26 +115,6 @@ const { data: sections, isLoading } = useQuery({
 
           h3 {
             color: var(--primary);
-          }
-        }
-
-        .edit-icon {
-          position: absolute;
-          top: 6px;
-          left: 6px;
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          height: 18px;
-          width: 18px;
-          border-radius: var(--radius-rounded);
-          background: var(--fade-grey-light-3);
-          opacity: 0;
-          pointer-events: none;
-          transition: all 0.3s; // transition-all test
-
-          i {
-            font-size: 0.8rem;
           }
         }
 
@@ -310,14 +190,6 @@ const { data: sections, isLoading } = useQuery({
             }
 
             .icon-wrap i {
-              color: var(--primary);
-            }
-          }
-
-          .edit-icon {
-            background: var(--dark-sidebar-light-2);
-
-            i {
               color: var(--primary);
             }
           }

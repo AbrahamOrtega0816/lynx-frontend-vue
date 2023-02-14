@@ -18,7 +18,7 @@ const dropdown = useDropdown(dropdownElement)
       @click="dropdown.toggle"
     >
       <i aria-hidden="true" class="iconify" data-icon="feather:bell"></i>
-      <span class="new-indicator pulsate"></span>
+      <!-- <span class="new-indicator pulsate"></span> -->
     </a>
     <div class="navbar-dropdown is-boxed is-right">
       <div class="heading">
@@ -30,7 +30,8 @@ const dropdown = useDropdown(dropdownElement)
         </div>
       </div>
       <div class="inner has-slimscroll">
-        <ul class="notification-list">
+        <div class="p-4">You don't have notifications yet</div>
+        <!-- <ul class="notification-list">
           <li>
             <a class="notification-item">
               <div class="img-left">
@@ -103,7 +104,7 @@ const dropdown = useDropdown(dropdownElement)
               </div>
             </a>
           </li>
-        </ul>
+        </ul> -->
       </div>
     </div>
   </div>

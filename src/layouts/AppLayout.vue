@@ -78,7 +78,11 @@ watch(
       <template #links>
         <li>
           <RouterLink to="/courses">
-            <i aria-hidden="true" class="iconify" data-icon="feather:home" />
+            <i
+              aria-hidden="true"
+              class="iconify"
+              data-icon="fluent-mdl2:publish-course"
+            />
           </RouterLink>
         </li>
       </template>
@@ -165,7 +169,9 @@ watch(
               </h1>
             </div>
 
-            <Toolbar class="desktop-toolbar" />
+            <Toolbar class="desktop-toolbar">
+              <ToolbarNotification />
+            </Toolbar>
           </div>
 
           <slot />

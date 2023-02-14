@@ -65,7 +65,7 @@ watch(locale, () => {
             </div>
           </div>
 
-          <div class="language-box">
+          <!-- <div class="language-box">
             <div class="language-option">
               <input v-model="locale" type="radio" name="language_selection" value="fr" />
               <div class="language-option-inner">
@@ -133,7 +133,7 @@ watch(locale, () => {
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
         </div>
 
         <div class="img-wrap has-text-centered">
