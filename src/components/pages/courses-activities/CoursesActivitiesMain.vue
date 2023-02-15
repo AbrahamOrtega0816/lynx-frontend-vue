@@ -9,6 +9,7 @@ import { HttpStatusCode } from '/@src/common/enums/EHttpStatusCode'
 
 const route = useRoute()
 const notyf = useNotyf()
+const wizard = useWizard()
 
 const { id } = route.params as any
 
@@ -34,12 +35,15 @@ const { data: activities } = useQuery({
   queryKey: ['activities-of-lessons', id],
   queryFn: getActivitiesOfLesson,
   refetchOnWindowFocus: false,
+  onSuccess(data) {
+    wizard.setSteps({
+      steps: data?.length - 1,
+    })
+  },
 })
 
-const wizard = useWizard()
-
 useHead({
-  title: computed(() => `${wizard.stepTitle} - Wizard V1 - Vuero`),
+  title: computed(() => `activities`),
 })
 </script>
 
@@ -50,7 +54,7 @@ useHead({
     class="wizard-progress"
     color="primary"
     size="smaller"
-    :value="(wizard.step / activities?.length) * 100"
+    :value="(wizard.step / (activities?.length - 1)) * 100"
     :max="100"
   />
   <!--Main Wrapper-->
@@ -60,7 +64,11 @@ useHead({
       :key="index"
       v-if="activitie === EActivities.multipleChoiseActivities"
     >
-      <MultipleChoiseActivities v-if="wizard.step === index" :data="activitie" />
+      <MultipleChoiseActivities
+        v-if="wizard.step === index"
+        :data="activitie"
+        :index="index"
+      />
     </div>
 
     <FillInTheFieldsActivities
@@ -166,7 +174,7 @@ useHead({
 2. Wizard V1
 ========================================================================== */
 .wizard-v1-wrapper {
-  padding-top: 60px;
+  padding-top: 10px;
   padding-bottom: 60px;
 
   .inner-wrapper {

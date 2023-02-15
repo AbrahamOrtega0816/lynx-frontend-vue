@@ -1,90 +1,45 @@
 <script setup lang="ts">
+import { useWizard } from '/@src/composable/useWizard'
 import { IActivity } from '/@src/models/IActivities'
 
 const props = withDefaults(
   defineProps<{
     data: IActivity | null
+    index: number
   }>(),
   {
     data: null,
+    index: 0,
   }
 )
+
+const wizard = useWizard()
+
+wizard.setStep({
+  number: props?.index,
+})
 </script>
 <template>
   <Transition name="fade-slow">
     <div class="form-section-inner">
-      <div class="options">
-        <VField class="option">
-          <VInput raw type="radio" name="radio-multi" />
-          <div class="indicator">
-            <i aria-hidden="true" class="iconify" data-icon="feather:check"></i>
-          </div>
-          <div class="option-inner">
-            <i aria-hidden="true" class="lnil lnil-consulting"></i>
-            <h4>Double check</h4>
-            <p>Second control pass</p>
-          </div>
-        </VField>
-
-        <VField class="option">
-          <VInput raw type="radio" name="radio-multi" />
-          <div class="indicator">
-            <i aria-hidden="true" class="iconify" data-icon="feather:check"></i>
-          </div>
-          <div class="option-inner">
-            <i aria-hidden="true" class="lnil lnil-tie"></i>
-            <h4>Agent</h4>
-            <p>Dedicated agent</p>
-          </div>
-        </VField>
-
-        <VField class="option">
-          <VInput raw type="radio" name="radio-multi" />
-          <div class="indicator">
-            <i aria-hidden="true" class="iconify" data-icon="feather:check"></i>
-          </div>
-          <div class="option-inner">
-            <i aria-hidden="true" class="lnil lnil-handshake"></i>
-            <h4>Insurance</h4>
-            <p>Level 1-3 goods</p>
-          </div>
-        </VField>
-
-        <VField class="option">
-          <VInput raw type="radio" name="radio-multi" />
-          <div class="indicator">
-            <i aria-hidden="true" class="iconify" data-icon="feather:check"></i>
-          </div>
-          <div class="option-inner">
-            <i aria-hidden="true" class="lnil lnil-licencse"></i>
-            <h4>Extension</h4>
-            <p>License extension</p>
-          </div>
-        </VField>
-
-        <VField class="option">
-          <VInput raw type="radio" name="radio-multi" />
-          <div class="indicator">
-            <i aria-hidden="true" class="iconify" data-icon="feather:check"></i>
-          </div>
-          <div class="option-inner">
-            <i aria-hidden="true" class="lnil lnil-pie-chart-alt"></i>
-            <h4>BI Reports</h4>
-            <p>Custom made reports</p>
-          </div>
-        </VField>
-
-        <VField class="option">
-          <VInput raw type="radio" name="radio-multi" />
-          <div class="indicator">
-            <i aria-hidden="true" class="iconify" data-icon="feather:check"></i>
-          </div>
-          <div class="option-inner">
-            <i aria-hidden="true" class="lnil lnil-customer"></i>
-            <h4>Metrics</h4>
-            <p>Setup live metrics</p>
-          </div>
-        </VField>
+      <div class="mb-5" v-for="(questions, index) in data?.content" :key="index">
+        <h1 class="title is-4">{{ questions.tittle }} ?</h1>
+        <div class="options">
+          <VField
+            v-for="(option, _index) in questions.options"
+            :key="_index"
+            class="option"
+          >
+            <VInput raw type="radio" :name="`radio-activities-${index}`" />
+            <div class="indicator">
+              <i aria-hidden="true" class="iconify" data-icon="feather:check"></i>
+            </div>
+            <div class="option-inner">
+              <i aria-hidden="true" class="lnil lnil-consulting"></i>
+              <h4>{{ option.name }}</h4>
+            </div>
+          </VField>
+        </div>
       </div>
     </div>
   </Transition>
@@ -128,6 +83,7 @@ const props = withDefaults(
         ~ .option-inner {
           border-color: var(--primary);
           box-shadow: var(--light-box-shadow);
+          text-align: center;
 
           i {
             color: var(--primary);
@@ -164,6 +120,7 @@ const props = withDefaults(
       border: 1px solid var(--border);
       border-radius: 0.5rem;
       transition: border 0.3s, box-shadow 0.3s;
+      text-align: center;
 
       h4 {
         color: var(--dark-text);
