@@ -3,6 +3,7 @@
 import { useQuery } from 'vue-query'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { lessonsService } from '/@src/services'
+import { HttpStatusCode } from '/@src/common/enums/EHttpStatusCode'
 
 const notyf = useNotyf()
 const router = useRouter()
@@ -22,7 +23,7 @@ const getLessonsByGroupId = async () => {
   const response = await lessonsService
     .getLessonsByGroupId(props.lessonId as number)
     .then((res) => {
-      if (res.status === 200) {
+      if (res.status === HttpStatusCode.Ok) {
         return res.data.lessons
       } else {
         notyf.info(`${res.message}`)

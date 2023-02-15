@@ -5,7 +5,8 @@ import { useNotyf } from '/@src/composable/useNotyf'
 import { useUserSession } from '/@src/stores/userSession'
 import { useForm } from 'vee-validate'
 import { omit } from 'lodash'
-import { IUser, IUserData } from '/@src/models/user'
+import { IUser, IUserData } from '../../../models/IUser.js'
+import { HttpStatusCode } from '/@src/common/enums/EHttpStatusCode'
 
 const notyf = useNotyf()
 
@@ -35,7 +36,7 @@ const getProfile = async () => {
   const reponse = await userService
     .getusersById(user_id as number)
     .then((res) => {
-      if (res.status === 200) {
+      if (res.status === HttpStatusCode.Ok) {
         return res.data
       } else {
         notyf.info(`${res.message}`)
@@ -74,7 +75,7 @@ const putUpdateUserProfile = async (image: string) => {
   await userService
     .putUpdateUserProfile(user_id as number, params)
     .then((res) => {
-      if (res.status === 200) {
+      if (res.status === HttpStatusCode.Ok) {
         const { name, image, score, id } = res.data
         setUser({ name, image, score, user_id: id } as IUserData)
         notyf.success('Your changes have been successfully saved!')

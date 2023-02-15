@@ -3,21 +3,23 @@ import { useQuery } from 'vue-query'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { courseService } from '/@src/services'
 import { useUserSession } from '/@src/stores/userSession'
+import { HttpStatusCode } from '/@src/common/enums/EHttpStatusCode'
 
 const notyf = useNotyf()
 const route = useRoute()
+const router = useRouter()
 
 const {
   user: { name, image },
 } = useUserSession()
 
-const { id } = route.params
+const { id } = route.params as any
 
 const getSectionsOfLesson = async () => {
   const response = await courseService
     .getSectionsOfLesson(id)
     .then((res) => {
-      if (res.status === 200) {
+      if (res.status === HttpStatusCode.Ok) {
         return res.data.sections
       } else {
         notyf.info(`${res.message}`)
@@ -50,11 +52,16 @@ const { data: sections, isLoading } = useQuery({
 
     <div class="profile-body mt-5">
       <div v-if="sections?.length > 0" class="settings-section">
-        <a class="settings-box" v-for="(section, index) in sections" :key="index">
+        <div
+          @click="() => router.push(`/courses/activities/${section.id}`)"
+          class="settings-box"
+          v-for="(section, index) in sections"
+          :key="index"
+        >
           <VIconWrap dark="6" icon="lnil lnil-apartment" />
           <span>{{ section.title }}</span>
           <!-- <h3>Manage Company</h3> -->
-        </a>
+        </div>
       </div>
       <div :class="[!isLoading && 'is-hidden']">
         <div class="columns is-multiline p-6">

@@ -57,7 +57,7 @@ export default defineComponent({
 
       return {
         name: route.name,
-        params: route.params,
+        params: route.params as any,
         query: query,
       } as RouteLocationOptions
     })

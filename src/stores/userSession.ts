@@ -1,7 +1,7 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 import { useStorage } from '@vueuse/core'
-import { IUserData } from '../models/user'
+import { IUserData } from '../models/IUser'
 
 const userValues = {
   user_id: 0,

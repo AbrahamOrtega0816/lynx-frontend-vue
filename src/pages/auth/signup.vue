@@ -10,7 +10,7 @@ import * as yup from 'yup'
 import { authService } from '/@src/services'
 import { useUserSession } from '/@src/stores/userSession'
 import { omit } from 'lodash'
-import { IUserData } from '/@src/models/user'
+import { IUserData } from '../../models/IUser.js'
 
 let slider: TinySliderInstance
 const sliderElement = ref<HTMLElement>()

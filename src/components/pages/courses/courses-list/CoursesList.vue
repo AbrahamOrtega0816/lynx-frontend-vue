@@ -6,6 +6,7 @@ import { useQuery } from 'vue-query'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { type IcoursesFilters } from '/@src/common/Icourses'
 import { useForm } from 'vee-validate'
+import { HttpStatusCode } from '/@src/common/enums/EHttpStatusCode'
 
 const notyf = useNotyf()
 
@@ -33,7 +34,7 @@ const getListCourses = async () => {
   const response = await courseService
     .getListCourses(user_id as number, form.values)
     .then((res) => {
-      if (res.status === 200) {
+      if (res.status === HttpStatusCode.Ok) {
         return res.data
       } else {
         notyf.info(`${res.message}`)

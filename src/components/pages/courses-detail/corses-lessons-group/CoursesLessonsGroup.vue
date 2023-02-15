@@ -6,6 +6,7 @@ import { useQuery } from 'vue-query'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { lessonsService } from '/@src/services'
 import sleep from '/@src/utils/sleep'
+import { HttpStatusCode } from '/@src/common/enums/EHttpStatusCode'
 
 interface lesson {
   id: number
@@ -92,7 +93,7 @@ const getLessonsGroups = async () => {
   const response = await lessonsService
     .getLessonsGroups(props.id)
     .then((res) => {
-      if (res.status === 200) {
+      if (res.status === HttpStatusCode.Ok) {
         return res.data.groups_lessons
       } else {
         notyf.info(`${res.message}`)

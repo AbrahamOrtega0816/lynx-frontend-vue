@@ -3,8 +3,9 @@ import { useQuery } from 'vue-query'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { courseService } from '/@src/services'
 import { useUserSession } from '/@src/stores/userSession'
-import { useFlexRadialChartCircle } from '/@src/models/flexRadialChartCircleChart'
+import { useFlexRadialChartCircle } from '../../../../models/IFlexRadialChartCircleChart.js'
 import ApexChart from 'vue3-apexcharts'
+import { HttpStatusCode } from '/@src/common/enums/EHttpStatusCode'
 
 const { flexRadialChartCircleOptions } = useFlexRadialChartCircle()
 const notyf = useNotyf()
@@ -26,7 +27,7 @@ const getCourseDetail = async () => {
   const response = await courseService
     .getCourseDetail(id)
     .then((res) => {
-      if (res.status === 200) {
+      if (res.status === HttpStatusCode.Ok) {
         return res.data
       } else {
         notyf.info(`${res.message}`)

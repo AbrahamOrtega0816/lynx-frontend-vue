@@ -7,7 +7,8 @@ import * as yup from 'yup'
 import { Field, useForm } from 'vee-validate'
 import { authService } from '/@src/services'
 import { omit } from 'lodash'
-import { IUserData } from '/@src/models/user'
+import { IUserData } from '../../models/IUser.js'
+import { HttpStatusCode } from '/@src/common/enums/EHttpStatusCode'
 const isLoading = ref(false)
 const darkmode = useDarkmode()
 const router = useRouter()
@@ -47,7 +48,7 @@ const handleLogin = async () => {
     await authService
       .postLogin(values)
       .then(async (res) => {
-        if (res.status === 200) {
+        if (res.status === HttpStatusCode.Ok) {
           const { data } = res
           const { token } = data
           userSession.setToken(token)

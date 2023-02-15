@@ -77,7 +77,7 @@ const paginatedLink = (page = 1) => {
 
   return {
     name: route.name,
-    params: route.params,
+    params: route.params as any,
     query,
   } as RouteLocationOptions
 }

@@ -4,6 +4,7 @@ import { courseService } from '/@src/services'
 import { useQuery } from 'vue-query'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { Field } from 'vee-validate'
+import { HttpStatusCode } from '/@src/common/enums/EHttpStatusCode'
 
 const notyf = useNotyf()
 
@@ -11,7 +12,7 @@ const getCoursesStatus = async () => {
   const reponse = await courseService
     .getCoursesStatus()
     .then((res) => {
-      if (res.status === 200) {
+      if (res.status === HttpStatusCode.Ok) {
         return res.data.status
       } else {
         notyf.info(`${res.message}`)
@@ -27,7 +28,7 @@ const getCoursesCategories = async () => {
   const reponse = await courseService
     .getCoursesCategories()
     .then((res) => {
-      if (res.status === 200) {
+      if (res.status === HttpStatusCode.Ok) {
         return res.data.categories
       } else {
         notyf.info(`${res.message}`)
@@ -43,7 +44,7 @@ const getCoursesSpecialities = async () => {
   const reponse = await courseService
     .getCoursesSpecialities()
     .then((res) => {
-      if (res.status === 200) {
+      if (res.status === HttpStatusCode.Ok) {
         return res.data.specialities
       } else {
         notyf.info(`${res.message}`)

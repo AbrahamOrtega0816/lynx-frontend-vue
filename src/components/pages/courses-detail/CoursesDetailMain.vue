@@ -1,10 +1,9 @@
-<!-- eslint-disable prettier-vue/prettier -->
 <script lang="ts" setup>
 const route = useRoute()
-const { id } = route.params
+const { id } = route.params as any
 const lessonData = ref(null)
 </script>
-<!-- eslint-disable prettier-vue/prettier -->
+
 <template>
   <div class="columns is-multiline">
     <div class="column is-7">
@@ -17,9 +16,7 @@ const lessonData = ref(null)
       />
     </div>
     <div class="column">
-      <CoursesActivities :lesson-id="lessonData?.id" :lesson-name="lessonData?.name" />
+      <CoursesLessons :lesson-id="lessonData?.id" :lesson-name="lessonData?.name" />
     </div>
   </div>
 </template>
-
-<!-- eslint-disable prettier-vue/prettier -->

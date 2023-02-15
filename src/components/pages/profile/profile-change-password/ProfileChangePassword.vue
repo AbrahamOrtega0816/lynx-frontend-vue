@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import { HttpStatusCode } from '/@src/common/enums/EHttpStatusCode'
 import { useNotyf } from '/@src/composable/useNotyf'
 import { authService } from '/@src/services'
 import { useUserSession } from '/@src/stores/userSession'
@@ -25,7 +26,7 @@ const postResetPassword = async () => {
   await authService
     .postchangePassword(params)
     .then((res) => {
-      if (res.status === 200) {
+      if (res.status === HttpStatusCode.Ok) {
         notyf.success(`${res.data}`)
       } else {
         notyf.info(`${res.message}`)

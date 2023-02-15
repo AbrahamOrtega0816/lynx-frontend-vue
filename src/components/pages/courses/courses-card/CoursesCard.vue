@@ -5,6 +5,7 @@ import { useNotyf } from '/@src/composable/useNotyf'
 import { onceImageErrored } from '/@src/utils/via-placeholder'
 import { courseService } from '/@src/services'
 import { useUserSession } from '/@src/stores/userSession'
+import { HttpStatusCode } from '/@src/common/enums/EHttpStatusCode'
 
 defineProps<{
   courses?: Array<any>
@@ -37,7 +38,7 @@ const onChageFavoriteCourse = async (e: Event, course_id: number, name: string) 
   await courseService
     .putSetIsCourseFavorite(user_id as number, params)
     .then((res) => {
-      if (res.status === 200) {
+      if (res.status === HttpStatusCode.Ok) {
         notyf.success(
           `Your course ${name} has been ${
             params.is_favorite ? 'added' : 'deleted'
