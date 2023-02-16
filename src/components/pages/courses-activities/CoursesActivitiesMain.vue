@@ -43,7 +43,7 @@ const { data: activities } = useQuery({
 })
 
 useHead({
-  title: computed(() => `activities`),
+  title: `activities`,
 })
 </script>
 
@@ -59,17 +59,10 @@ useHead({
   />
   <!--Main Wrapper-->
   <form class="wizard-v1-wrapper" @submit.prevent="() => wizard?.validateStepFn?.()">
-    <div
-      v-for="(activitie, index) in activities"
-      :key="index"
+    <WrapperMultipleChoiseActivities
       v-if="activitie === EActivities.multipleChoiseActivities"
-    >
-      <MultipleChoiseActivities
-        v-if="wizard.step === index"
-        :data="activitie"
-        :index="index"
-      />
-    </div>
+      :data="activities"
+    />
 
     <FillInTheFieldsActivities
       :data="activities"
@@ -81,8 +74,8 @@ useHead({
       <div class="wizard-buttons-inner">
         <VButton
           class="wizard-button-previous"
-          :disabled="wizard.previousStepFn === null"
-          :color="wizard.previousStepFn === null ? 'light' : 'primary'"
+          :disabled="wizard.step === 0"
+          :color="wizard.step === 0 ? 'light' : 'primary'"
           bold
           elevated
           @click="() => wizard?.previousStepFn?.()"

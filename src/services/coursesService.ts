@@ -1,5 +1,5 @@
 import { type AxiosInstance } from 'axios'
-import { type IcoursesFilters } from '../common/Icourses'
+import { type IcoursesFilters } from '../models/Icourses'
 import { IResponse } from '../models/IDataResponse'
 
 const CourseService = (api: AxiosInstance) => ({

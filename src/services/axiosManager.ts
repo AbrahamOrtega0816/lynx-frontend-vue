@@ -44,7 +44,8 @@ instance.interceptors.response.use(
     const userSession = useUserSession()
     if (error.response.status === 401) {
       // delete stored token if it fails
-      userSession.logoutUser()
+      await userSession.logoutUser()
+      window.location.href = '/auth/login'
     }
     return Promise.reject(error.response.data || error)
   }

@@ -1,44 +1,83 @@
 <script setup lang="ts">
+import { useFieldArray, Field } from 'vee-validate'
 import { useWizard } from '/@src/composable/useWizard'
-import { IActivity } from '/@src/models/IActivities'
+import { type IActivity } from '/@src/models/IActivities'
+import { useMultipleChoiseActivities } from '/@src/stores/multipleChoiseActivities'
+import { cloneDeep } from 'lodash'
 
 const props = withDefaults(
   defineProps<{
     data: IActivity | null
     index: number
+    form: any
   }>(),
   {
     data: null,
     index: 0,
+    form: {},
   }
 )
-
 const wizard = useWizard()
+
+const { setData, getCurrentData } = useMultipleChoiseActivities()
 
 wizard.setStep({
   number: props?.index,
 })
+
+useFieldArray(`questions`)
+
+watch(
+  () => props.form.values,
+  (values) => {
+    setData(cloneDeep(values), wizard.step)
+  },
+  { deep: true }
+)
+watch(
+  () => wizard.step,
+  (newStep) => {
+    props.form.resetForm({
+      values: {
+        ...getCurrentData(newStep),
+      },
+    })
+  }
+)
 </script>
 <template>
   <Transition name="fade-slow">
     <div class="form-section-inner">
+      <h1 class="title is-5 mb-6">{{ data?.type }}</h1>
       <div class="mb-5" v-for="(questions, index) in data?.content" :key="index">
-        <h1 class="title is-4">{{ questions.tittle }} ?</h1>
+        <h1 class="title is-6">{{ questions.tittle }}</h1>
         <div class="options">
-          <VField
-            v-for="(option, _index) in questions.options"
-            :key="_index"
-            class="option"
+          <Field
+            :name="`questions[${index}].radio`"
+            v-slot="{ handleChange, field: { value } }"
           >
-            <VInput raw type="radio" :name="`radio-activities-${index}`" />
-            <div class="indicator">
-              <i aria-hidden="true" class="iconify" data-icon="feather:check"></i>
-            </div>
-            <div class="option-inner">
-              <i aria-hidden="true" class="lnil lnil-consulting"></i>
-              <h4>{{ option.name }}</h4>
-            </div>
-          </VField>
+            <VField
+              v-for="(option, _index) in questions.options"
+              :key="_index"
+              class="option"
+            >
+              <VInput
+                raw
+                type="radio"
+                :checked="option.id === value"
+                :name="`radio-activities-${index}`"
+                :value="option.id"
+                @change="handleChange"
+              />
+              <div class="indicator">
+                <i aria-hidden="true" class="iconify" data-icon="feather:check"></i>
+              </div>
+              <div class="option-inner">
+                <i aria-hidden="true" class="lnil lnil-consulting"></i>
+                <h4>{{ option.name }}</h4>
+              </div>
+            </VField>
+          </Field>
         </div>
       </div>
     </div>
@@ -141,6 +180,30 @@ wizard.setStep({
   }
 }
 
+.is-correct {
+  border-color: var(--success) !important;
+
+  h4 {
+    color: var(--success) !important;
+  }
+
+  i {
+    color: var(--success) !important;
+  }
+}
+
+.is-wrong {
+  border-color: var(--danger) !important;
+
+  h4 {
+    color: var(--danger) !important;
+  }
+
+  i {
+    color: var(--danger) !important;
+  }
+}
+
 .is-dark {
   .options {
     .option {
@@ -155,7 +218,7 @@ wizard.setStep({
           }
 
           ~ .option-inner {
-            border-color: var(--primary) !important;
+            border-color: var(--primary);
 
             i {
               color: var(--primary);
@@ -165,8 +228,8 @@ wizard.setStep({
       }
 
       .option-inner {
-        background-color: var(--dark-sidebar-light-2) !important;
-        border-color: var(--dark-sidebar-light-12) !important;
+        background-color: var(--dark-sidebar-light-2);
+        border-color: var(--dark-sidebar-light-12);
 
         h4 {
           color: var(--dark-dark-text);

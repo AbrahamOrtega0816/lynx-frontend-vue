@@ -15,6 +15,7 @@ const userValues = {
 export const useUserSession = defineStore('userSession', () => {
   // token will be synced with local storage
   // @see https://vueuse.org/core/usestorage/
+
   const token = useStorage('token', '')
 
   const user = useStorage<IUserData>('user', userValues)

@@ -4,7 +4,7 @@ import { courseService } from '/@src/services'
 import { useUserSession } from '/@src/stores/userSession'
 import { useQuery } from 'vue-query'
 import { useNotyf } from '/@src/composable/useNotyf'
-import { type IcoursesFilters } from '/@src/common/Icourses'
+import { type IcoursesFilters } from '../../../../models/Icourses.js'
 import { useForm } from 'vee-validate'
 import { HttpStatusCode } from '/@src/common/enums/EHttpStatusCode'
 

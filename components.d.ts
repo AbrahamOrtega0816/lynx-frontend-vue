@@ -137,5 +137,6 @@ declare module '@vue/runtime-core' {
     VTextEllipsis: typeof import('./src/components/base/typography/VTextEllipsis.vue')['default']
     VViewWrapper: typeof import('./src/components/base/layouts/VViewWrapper.vue')['default']
     VVivus: typeof import('./src/components/base/plugins/VVivus.vue')['default']
+    WrapperMultipleChoiseActivities: typeof import('./src/components/pages/courses-activities/multiple-choise-activities/WrapperMultipleChoiseActivities.vue')['default']
   }
 }
