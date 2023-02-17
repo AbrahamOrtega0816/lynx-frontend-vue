@@ -4,50 +4,36 @@ import type { InjectionKey } from 'vue'
  * Using typescript types allow better developer experience
  * with autocompletion and compiler error prechecking
  */
-import type { WizardData } from '/@src/models/wizard'
 import sleep from '/@src/utils/sleep'
 
 interface WizardStepOptions {
   number?: number
   steps?: number
+  disabled?: Array<boolean>
+  valid?: Array<boolean>
 }
-
 export type WizardContext = ReturnType<typeof createWizardContext>
 export const useWizardSymbolContext = Symbol('wizard') as InjectionKey<WizardContext>
 
 function createWizardContext() {
   const step = ref(0)
+  const valid = ref([false])
+  const disabled = ref([false])
   const steps = ref(1)
   const loading = ref(false)
-  const canNavigate = ref(false)
 
   const previousStepFn = () => {
-    if (step.value > 0) step.value--
+    if (step.value > 0) step.value = step.value - 1
   }
 
   const validateStepFn = () => {
-    if (step.value < steps.value) step.value++
+    if (!valid.value[step.value]) {
+      valid.value[step.value] = true
+      return
+    }
+    if (step.value < steps.value) step.value = step.value + 1
   }
 
-  const data = reactive<WizardData>({
-    name: '',
-    description: '',
-    relatedTo: 'UI/UX Design',
-    logo: null,
-    timeFrame: ref({
-      start: new Date(),
-      end: new Date(),
-    }),
-    budget: '< 5K',
-    attachments: [],
-    teammates: [],
-    tools: [],
-    customer: null,
-  })
-
-  function setLoading(value: boolean) {
-    loading.value = value
-  }
   function setStep(options?: WizardStepOptions) {
     step.value = options?.number || 0
   }
@@ -65,34 +51,15 @@ function createWizardContext() {
     loading.value = false
   }
 
-  function reset() {
-    data.name = ''
-    data.description = ''
-    data.relatedTo = 'UI/UX Design'
-    data.logo = null
-    data.timeFrame = {
-      start: new Date(),
-      end: new Date(),
-    }
-    data.budget = '< 5K'
-    data.attachments = []
-    data.teammates = []
-    data.tools = []
-    data.customer = null
-  }
-
   return reactive({
-    canNavigate,
     previousStepFn,
     validateStepFn,
     step,
     steps,
-    loading,
-    data,
-    setLoading,
+    valid,
+    disabled,
     setStep,
     save,
-    reset,
     setSteps,
   })
 }

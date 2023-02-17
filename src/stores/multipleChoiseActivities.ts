@@ -1,32 +1,22 @@
 import { acceptHMRUpdate, defineStore } from 'pinia'
-import { ref } from 'vue'
 import { cloneDeep } from 'lodash'
+import { multipleChoiseForm } from '../models/IMultipleChoiseActivities'
 
 export const useMultipleChoiseActivities = defineStore('multipleChoiseActivities', () => {
-  const loading = ref(true)
-  const index = ref(0)
-  const data = reactive<Array<any>>([])
+  const data = reactive<Array<multipleChoiseForm>>([])
 
-  const setData = (form: any, i: number) => {
+  const setData = (form: multipleChoiseForm, i: number) => {
     data[i] = { ...form }
   }
 
-  const setIndex = (i: number) => {
-    index.value = i
-  }
-
   const getCurrentData = (id: number) => {
-    console.log(data[id])
     return cloneDeep(data[id])
   }
 
   return {
     setData,
-    setIndex,
     getCurrentData,
-    index,
     data,
-    loading,
   } as const
 })
 

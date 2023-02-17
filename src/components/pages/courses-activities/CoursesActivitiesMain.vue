@@ -54,7 +54,7 @@ useHead({
     class="wizard-progress"
     color="primary"
     size="smaller"
-    :value="(wizard.step / (activities?.length - 1)) * 100"
+    :value="(wizard?.step / (activities?.length - 1)) * 100"
     :max="100"
   />
   <!--Main Wrapper-->
@@ -85,12 +85,12 @@ useHead({
         <VButton
           type="submit"
           class="wizard-button-previous"
-          :disabled="wizard.validateStepFn === null"
-          :color="wizard.validateStepFn === null ? 'light' : 'primary'"
+          :disabled="wizard.disabled[wizard.step]"
+          :color="wizard.disabled[wizard.step] ? 'light' : 'primary'"
           bold
           elevated
         >
-          Validate
+          {{ `${wizard.valid[wizard.step] ? 'Next' : 'Validate'}` }}
         </VButton>
       </div>
     </div>

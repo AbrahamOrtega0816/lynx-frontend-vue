@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { useFieldArray, Field } from 'vee-validate'
+import { Field } from 'vee-validate'
 import { useWizard } from '/@src/composable/useWizard'
 import { type IActivity } from '/@src/models/IActivities'
 import { useMultipleChoiseActivities } from '/@src/stores/multipleChoiseActivities'
@@ -17,6 +17,7 @@ const props = withDefaults(
     form: {},
   }
 )
+
 const wizard = useWizard()
 
 const { setData, getCurrentData } = useMultipleChoiseActivities()
@@ -25,21 +26,20 @@ wizard.setStep({
   number: props?.index,
 })
 
-useFieldArray(`questions`)
-
 watch(
   () => props.form.values,
   (values) => {
-    setData(cloneDeep(values), wizard.step)
+    setData(cloneDeep({ ...values }), wizard.step)
   },
   { deep: true }
 )
+
 watch(
   () => wizard.step,
   (newStep) => {
     props.form.resetForm({
       values: {
-        ...getCurrentData(newStep),
+        ...cloneDeep({ ...getCurrentData(newStep) }),
       },
     })
   }
@@ -53,17 +53,26 @@ watch(
         <h1 class="title is-6">{{ questions.tittle }}</h1>
         <div class="options">
           <Field
-            :name="`questions[${index}].radio`"
+            :name="`questions[${index}].answers`"
             v-slot="{ handleChange, field: { value } }"
           >
             <VField
               v-for="(option, _index) in questions.options"
               :key="_index"
               class="option"
+              :class="`option ${
+                !option.wrong && wizard.valid[wizard.step] && 'is-correct'
+              } ${
+                option.wrong &&
+                wizard.valid[wizard.step] &&
+                option.id === value &&
+                'is-wrong'
+              }`"
             >
               <VInput
                 raw
                 type="radio"
+                :disabled="wizard.valid[wizard.step]"
                 :checked="option.id === value"
                 :name="`radio-activities-${index}`"
                 :value="option.id"
@@ -73,7 +82,11 @@ watch(
                 <i aria-hidden="true" class="iconify" data-icon="feather:check"></i>
               </div>
               <div class="option-inner">
-                <i aria-hidden="true" class="lnil lnil-consulting"></i>
+                <i
+                  aria-hidden="true"
+                  class="iconify"
+                  data-icon="flat-color-icons:answers"
+                ></i>
                 <h4>{{ option.name }}</h4>
               </div>
             </VField>
@@ -102,6 +115,42 @@ watch(
       outline-width: var(--accessibility-focus-outline-width);
       outline-style: var(--accessibility-focus-outline-style);
       outline-color: var(--accessibility-focus-outline-color);
+    }
+
+    &.is-correct {
+      .option-inner {
+        border-color: var(--success) !important;
+
+        h4 {
+          color: var(--success) !important;
+        }
+
+        i {
+          color: var(--success) !important;
+        }
+      }
+
+      > .indicator {
+        background: var(--success) !important;
+      }
+    }
+
+    &.is-wrong {
+      .option-inner {
+        border-color: var(--danger) !important;
+
+        h4 {
+          color: var(--danger) !important;
+        }
+
+        i {
+          color: var(--danger) !important;
+        }
+      }
+
+      > .indicator {
+        background: var(--danger) !important;
+      }
     }
 
     input {
@@ -171,36 +220,12 @@ watch(
         font-size: 0.9rem;
       }
 
-      i {
+      svg {
         font-size: 2.25rem;
         color: var(--light-text);
         margin-bottom: 0.25rem;
       }
     }
-  }
-}
-
-.is-correct {
-  border-color: var(--success) !important;
-
-  h4 {
-    color: var(--success) !important;
-  }
-
-  i {
-    color: var(--success) !important;
-  }
-}
-
-.is-wrong {
-  border-color: var(--danger) !important;
-
-  h4 {
-    color: var(--danger) !important;
-  }
-
-  i {
-    color: var(--danger) !important;
   }
 }
 
