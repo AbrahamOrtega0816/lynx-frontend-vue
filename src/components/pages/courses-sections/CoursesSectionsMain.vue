@@ -4,6 +4,7 @@ import { useNotyf } from '/@src/composable/useNotyf'
 import { courseService } from '/@src/services'
 import { useUserSession } from '/@src/stores/userSession'
 import { HttpStatusCode } from '/@src/common/enums/EHttpStatusCode'
+import { onceImageErrored } from '/@src/utils/via-placeholder'
 
 const notyf = useNotyf()
 const route = useRoute()
@@ -50,17 +51,28 @@ const { data: sections, isLoading } = useQuery({
       <h3 class="title is-4 is-narrow mt-5">{{ name }}</h3>
     </div>
 
-    <div class="profile-body mt-5">
-      <div v-if="sections?.length > 0" class="settings-section">
+    <div class="all-projects mt-5">
+      <div
+        v-if="sections?.length > 0"
+        class="columns is-multiline project-grid is-flex-tablet-p is-half-tablet-p"
+      >
         <div
-          @click="() => router.push(`/courses/activities/${section.id}`)"
-          class="settings-box"
+          class="column is-6-tablet is-3-desktop is-3-fullhd is-one-fifth"
           v-for="(section, index) in sections"
           :key="index"
+          @click="() => router.push(`/courses/activities/${section.id}`)"
         >
-          <VIconWrap dark="6" icon="lnil lnil-apartment" />
-          <span>{{ section.title }}</span>
-          <!-- <h3>Manage Company</h3> -->
+          <a class="project-grid-item">
+            <img
+              class="project-avatar"
+              src="/images/icons/logos/slicer.svg"
+              alt=""
+              @error.once="onceImageErrored(150)"
+            />
+            <h3>{{ section.title }}</h3>
+            <p>{{ section.tag }}</p>
+            <VProgress size="tiny" :value="31" />
+          </a>
         </div>
       </div>
       <div :class="[!isLoading && 'is-hidden']">
@@ -77,141 +89,69 @@ const { data: sections, isLoading } = useQuery({
 <style lang="scss">
 @import '/@src/scss/abstracts/all';
 
-.profile-wrapper {
-  .profile-body {
-    .settings-section {
-      display: flex;
-      flex-wrap: wrap;
-      max-width: 880px;
-      margin: 0 auto;
+.all-projects {
+  .section-heading {
+    font-family: var(--font-alt);
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    color: var(--light-text);
+    margin-bottom: 1rem;
+  }
 
-      .settings-box {
-        position: relative;
-        width: calc(20% - 16px);
-        background: var(--white);
-        text-align: center;
-        padding: 16px;
-        margin: 8px;
-        border-radius: 8px;
-        border: 1px solid var(--fade-grey-dark-3);
+  .project-grid {
+    margin-bottom: 1.5rem;
+
+    .project-grid-item {
+      @include vuero-s-card;
+
+      text-align: center;
+      box-shadow: none;
+
+      &:hover,
+      &:focus {
+        border-color: var(--fade-grey-dark-6);
+        box-shadow: var(--light-box-shadow);
+
+        .project-avatar {
+          filter: grayscale(0);
+          opacity: 1;
+        }
+      }
+
+      .project-avatar {
+        display: block;
+        height: 40px;
+        width: 40px;
+        border-radius: 10px;
+        margin: 0 auto 10px;
+        filter: grayscale(1);
+        opacity: 0.6;
         transition: all 0.3s; // transition-all test
-        cursor: pointer;
+      }
 
-        &:hover,
-        &:focus {
-          border-color: var(--primary);
-          box-shadow: var(--light-box-shadow);
+      h3 {
+        font-size: 0.95rem;
+        font-family: var(--font-alt);
+        font-weight: 600;
+        color: var(--dark-text);
+      }
 
-          .icon-wrap {
-            i {
-              color: var(--primary);
-            }
-          }
-
-          h3 {
-            color: var(--primary);
-          }
-        }
-
-        &.is-active {
-          .icon-wrap {
-            i {
-              color: var(--primary);
-            }
-          }
-
-          h3 {
-            color: var(--primary);
-          }
-        }
-
-        .icon-wrap {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          background: none !important;
-          border: none;
-          box-shadow: none;
-          height: 52px;
-          width: 100%;
-
-          i {
-            font-size: 2.7rem;
-            color: var(--light-text-light-12);
-            margin-bottom: 4px;
-            transition: color 0.3s;
-          }
-
-          img {
-            display: block;
-            max-width: 90px;
-          }
-        }
-
-        span {
-          text-align: center;
-          display: block;
-          text-transform: uppercase;
-          color: var(--light-text);
-          font-family: var(--font-alt);
-          font-size: 0.7rem;
-          letter-spacing: 1px;
-        }
-
-        h3 {
-          font-family: var(--font);
-          font-size: 0.9rem;
-          font-weight: 400;
-          color: var(--light-text);
-          transition: color 0.3s;
-        }
+      p {
+        font-size: 0.9rem;
+        margin-bottom: 10px;
       }
     }
   }
 }
 
 .is-dark {
-  .profile-wrapper {
-    .profile-body {
-      .settings-section {
-        .settings-box {
-          background: var(--dark-sidebar-light-6);
-          border-color: var(--dark-sidebar-light-12);
+  .all-projects {
+    .project-grid {
+      .project-grid-item {
+        @include vuero-card--dark;
 
-          &:hover,
-          &:focus {
-            border-color: var(--primary);
-
-            h3 {
-              color: var(--primary);
-            }
-
-            .icon-wrap i {
-              color: var(--primary);
-            }
-          }
-
-          &.is-active {
-            h3 {
-              color: var(--primary);
-            }
-
-            .icon-wrap i {
-              color: var(--primary);
-            }
-          }
-
-          .icon-wrap {
-            background: none !important;
-
-            i {
-              color: var(--light-text-dark-20);
-
-              &.is-solid {
-                color: var(--primary);
-              }
-            }
-          }
+        h3 {
+          color: var(--dark-dark-text);
         }
       }
     }
@@ -219,23 +159,18 @@ const { data: sections, isLoading } = useQuery({
 }
 
 @media only screen and (max-width: 767px) {
-  .profile-wrapper {
-    .profile-body {
-      .settings-section {
-        .settings-box {
-          width: calc(50% - 16px);
-        }
-      }
-    }
-  }
-}
+  .all-projects {
+    .all-projects-header {
+      flex-direction: column;
 
-@media only screen and (min-width: 768px) and (max-width: 1024px) and (orientation: portrait) {
-  .profile-wrapper {
-    .profile-body {
-      .settings-section {
-        .settings-box {
-          width: calc(25% - 16px);
+      .header-item {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid var(--fade-grey-dark-3);
+        padding: 16px 0;
+
+        &:last-child {
+          border-bottom: none;
         }
       }
     }
